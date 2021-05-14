@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="eCommerce HTML Template Free Download" name="keywords" />
+    <meta content="eCommerce HTML Template Free Download" name="description" />
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+          crossorigin="anonymous" />
+
+    <!-- Template Stylesheet -->
+    <link href="~/Assets/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+
+    <!-- Top bar Start -->
+    <div class="top-bar fw-600">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <a class="m-2" href="index.html">Anasayfa</a>
+                    <a class="m-2" href="product-list.php">Ürünler</a>
+                    <a class="m-2"
+                       href=""
+                       onclick="alert('Ekibimiz:\nKubilay Gökay\nMuhammed Ali Özkaya\nZeynep Arslan');">Ekibimiz</a>
+                    <a class="m-2"
+                       href=""
+                       onclick="alert('Bize Ulaşmak için\njupiter@gamekolik.com\nMail adresini kullanabilirsiniz');">İletişim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Top bar End -->
+    <div style="height: 5px" class="nav p-0"></div>
+    <!-- Bottom Bar Start -->
+    <div class="bottom-bar">
+        <div class="container-fluid pr-3">
+            <div class="row align-items-center">
+                <div class="col-xs-6">
+                    <div class="logo">
+                        <a href="index.php">
+                            <img src="~/Images/logo.png" alt="Logo" />
+                        </a>
+                    </div>
+                </div>
+                <div class="navbar-nav col-xs-6 ml-auto mr-3">
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link" data-toggle="dropdown">
+                            <div class="row p-0 m-0 d-flex align-items-center"
+                                 style="border: #7c4d25 1px solid; border-radius: 5px">
+                                <div style="font-size: 14px" class="mr-2">
+                                    <i class="fas fa-user fa-2x fa-fw"></i>
+                                </div>
+                                <div style="font-size: 18px" class="col">
+                                    <span class="row"> <b>Giriş Yap</b></span>
+                                    <span style="font-size: 12px" class="row">
+                                        veya Üye Ol
+                                    </span>
+                                </div>
+                                <div style="font-size: 12px" class="ml-2">
+                                    <i class="fas fa-angle-down fa-2x fa-fw"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a href="#modalLogin" class="dropdown-item" data-toggle="modal">Login</a>
+                            <a href="#modalRegister"
+                               class="dropdown-item"
+                               data-toggle="modal">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Bar End -->
+    <!-- Modals Start -->
+
+    <div id="modalLogin" class="modal fade">
+        <div class="modal-dialog modal-login modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <form action="netting/database.php" method="post">
+                    <div class="modal-header">
+                        <h3 class="modal-title text-danger">Login</h3>
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Kullanıcı Adı</label>
+                            <input name="userName"
+                                   type="text"
+                                   class="form-control"
+                                   required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <div class="clearfix">
+                                <label>Şifre</label>
+                                <a href="#" class="float-right text-muted"><small>Şifremi Unuttum</small></a>
+                            </div>
+
+                            <input name="password"
+                                   type="password"
+                                   class="form-control"
+                                   required="required" />
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <label class="form-check-label"><input type="checkbox" /> Beni Hatırla</label>
+                        <input name="kullanici_giris"
+                               type="submit"
+                               class="btn btn-success"
+                               value="Login" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="modalRegister" class="modal fade">
+        <div class="modal-dialog modal-login modal-dialog-centered">
+            <div class="modal-content">
+                <form action="netting/database.php"
+                      method="POST"
+                      enctype="multipart/form-data"
+                      data-parsley-validate>
+                    <div class="modal-header">
+                        <h3 class="modal-title text-danger">Üye Ol</h3>
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            &times;
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Kullanıcı Adı</label>
+                                </div>
+                                <input type="password"
+                                       class="form-control"
+                                       required="required"
+                                       name="userPassword" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Şifre</label>
+                                </div>
+                                <input type="text"
+                                       class="form-control"
+                                       required="required"
+                                       name="userFirstName" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>İsim</label>
+                                <input type="text"
+                                       class="form-control"
+                                       required="required"
+                                       name="userName" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Soyisim</label>
+                                </div>
+                                <input type="email"
+                                       class="form-control"
+                                       required="required"
+                                       name="userEmail" />
+                            </div>
+                        </div>
+
+                        <div class="col-md">
+                            <div class="form-group">
+                                <label>TC</label>
+                                <input type="text"
+                                       class="form-control"
+                                       required="required"
+                                       name="userName" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Telefon</label>
+                                </div>
+                                <input type="email"
+                                       class="form-control"
+                                       required="required"
+                                       name="userEmail" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Email</label>
+                                </div>
+                                <input type="password"
+                                       class="form-control"
+                                       required="required"
+                                       name="userPassword" />
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <label>Adres</label>
+                                </div>
+                                <textarea name="deneme" class="form-group col-md" id="deneme" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-end">
+                        <button type="submit"
+                                name="userRegister"
+                                class="btn btn-success"
+                                value="Register">
+                            Kayıt Ol
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @RenderBody()
+
+    <!-- Footer Bottom Start -->
+    <div class="footer-bottom mt-5 fw-600">
+        <div class="container-fluid">
+            <div class="row justify-content-between">
+                <div class="col-md-6">
+                    <a class="m-2" href="index.html">Anasayfa</a>
+                    <a class="m-2" href="product-list.php">Ürünler</a>
+                    <a class="m-2"
+                       href=""
+                       onclick="alert('Ekibimiz:\nKubilay Gökay\nMuhammed Ali Özkaya\nZeynep Arslan');">Ekibimiz</a>
+                    <a class="m-2"
+                       href=""
+                       onclick="alert('Bize Ulaşmak için\njupiter@gamekolik.com\nMail adresini kullanabilirsiniz');">İletişim</a>
+                </div>
+                <div class="col-md-6 copyright text-right">
+                    <p class="fw-600">
+                        &copy; 2021 GameKolik created by<a href="https://htmlcodex.com">
+                            Jupiter
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Bottom End -->
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+            integrity="sha512-bnIvzh6FU75ZKxp0GXLH9bewza/OIw6dLVh9ICg0gogclmYGguQJWl8U30WpbsGTqbIiAwxTsbe76DErLq5EDQ=="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+    <script src="~/Assets/js/app.js"></script>
+</body>
+</html>

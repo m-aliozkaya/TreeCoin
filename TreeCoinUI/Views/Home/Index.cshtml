@@ -1,0 +1,156 @@
+﻿@model IEnumerable<TreeCoinUI.Entity.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@foreach (var item in Model)
+{
+    @item.Name
+}
+
+<div class="container" style="max-width: 1000px">
+    <div class="row">
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/armut.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Armut</h5>
+                    <p class="card-text">
+                        Armut yemesi kolay tadı güzel bir meyvedir. Türkiye iklimlerinde
+                        bile yetişen bu meyveyi rahatlıkla marketlerden alabilirsiniz.
+                    </p>
+                    <a href="#modalLogin" class="btn btn-danger" data-toggle="modal">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/arpa.png"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Arpa</h5>
+                    <p class="card-text">
+                        Arpa hakkında pek bir bilgim yok ama buraya yine de bir şeyler
+                        sallamak istiyorum. Bence arpa buğdayın yetiştiği yerlerde
+                        yetişebilir teşekkürler.
+                    </p>
+                    <div>
+                        <a href="#" class="btn btn-danger">Satın al</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/buğday.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Buğday</h5>
+                    <p class="card-text">Buğday, Türkiye' de Konya' da yetişiyor.</p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/elma.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Elma</h5>
+                    <p class="card-text">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit
+                        rem neque debitis laborum nemo magnam placeat ad natus iste
+                        officia.
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/kömür.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Kömür</h5>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
+                        quis hic sunt necessitatibus explicabo magnam corporis iste
+                        tempore aspernatur molestiae.
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/nane.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Nane</h5>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Voluptates recusandae sequi quos velit delectus nisi dolore,
+                        harum voluptatibus debitis dolorum?
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/odun.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Odun</h5>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                        Temporibus numquam corporis doloremque nesciunt esse? Molestias
+                        dolor perspiciatis quam
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/pamuk.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Pamuk</h5>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
+                        soluta cupiditate quae nihil id recusandae repudiandae. Harum,
+                        iste exercitationem? Praesentium.
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product">
+            <div class="card">
+                <img class="card-img-top"
+                     src="~/Images/products/patates.jpg"
+                     alt="Card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title">Patates</h5>
+                    <p class="card-text">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Distinctio, nulla quas cum doloribus assumenda reprehenderit et
+                        explicabo enim aspernatur tenetur?
+                    </p>
+                    <a href="#" class="btn btn-danger">Satın al</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
