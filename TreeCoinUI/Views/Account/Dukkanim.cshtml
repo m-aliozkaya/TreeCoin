@@ -1,4 +1,5 @@
-﻿
+﻿@model IEnumerable<TreeCoinUI.Models.Dukkanim>
+
 @{
     ViewBag.Title = "Dukkanim";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,41 +21,38 @@
                             <td>Ad</td>
                             <td>Resim</td>
                             <td>Fiyat</td>
+                            <td>Miktar</td>
                             <td>Durum</td>
                             <td>İşlemler</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Armut</td>
-                            <td><img src="img/products/armut.jpg" class="img-fluid" style="max-height: 150px;" alt="Armut"></td>
-                            <td>2 TL</td>
-                            <td>Onaylandı</td>
-                            <td class="d-flex">
-                                <button class="btn btn-danger btn-sm mr-2">Sil</button>
-                                <button class="btn btn-primary btn-sm">Düzenle</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Arpa</td>
-                            <td><img src="img/products/arpa.png" class="img-fluid" style="max-height: 150px;" alt="Armut"></td>
-                            <td>3 TL</td>
-                            <td>Onay bekliyor</td>
-                            <td class="d-flex">
-                                <button class="btn btn-danger btn-sm mr-2">Sil</button>
-                                <button class="btn btn-primary btn-sm">Düzenle</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Buğday</td>
-                            <td><img src="img/products/buğday.jpg" class="img-fluid" style="max-height: 150px;" alt="Armut"></td>
-                            <td>5 TL</td>
-                            <td>Onay bekliyor</td>
-                            <td class="d-flex">
-                                <button class="btn btn-danger btn-sm mr-2">Sil</button>
-                                <button class="btn btn-primary btn-sm">Düzenle</button>
-                            </td>
-                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td><img src="~/Images/products/@item.Image" class="img-fluid" style="max-height: 150px;" alt="Armut"></td>
+                                <td>@item.Price TL</td>
+                                <td>@item.QuantityValue</td>
+                                @if (item.IsApproved)
+                                {
+                                    <td>Onaylı Ürün</td>
+                                }
+                                else
+                                {
+                                    <td>Onay Bekleniyor</td>
+
+                                }
+                                <td class="d-flex">
+                                    <button class="btn btn-danger btn-sm mr-2">Sil</button>
+                                    <button class="btn btn-primary btn-sm">Düzenle</button>
+                                </td>
+                            </tr>
+                        }
+
+
+
                     </tbody>
                 </table>
             </div>

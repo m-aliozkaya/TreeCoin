@@ -30,7 +30,15 @@ namespace TreeCoinUI.Controllers
 
         public ActionResult Dukkanim()
         {
-            return View();
+            var userId = User.Identity.GetUserId();
+            var bakiye = _context.Users.Find(userId).Money;
+            var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            var model = _context.SupplierProducts.Join(_context.Products, sp => sp.ProductId, p => p.Id, (sp, p) => new Dukkanim(){
+            ProductId = p.Id, Image = p.Image, IsApproved = p.IsApproved, QuantityValue = sp.QuantityValue, ProductName = p.Name, Price = sp.Price, SupplierId = sp.SupplierId
+            }).Where(sp => sp.SupplierId == supplier.Id).ToList();
+
+            return View(model);
         }
 
         public ActionResult Cuzdanim()
@@ -57,6 +65,8 @@ namespace TreeCoinUI.Controllers
             return View(model);
         }
 
+
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult LoadMoney(int Id, string submit)
         {

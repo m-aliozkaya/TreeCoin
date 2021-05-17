@@ -156,7 +156,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SupplierProductsController.cs" />
     <Compile Include="Entity\Customer.cs" />
     <Compile Include="Entity\FinanceType.cs" />
@@ -174,10 +176,15 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\IdentityDataContext.cs" />
     <Compile Include="Identity\IdentityDataInitializer.cs" />
+    <Compile Include="Models\Admin.cs" />
+    <Compile Include="Models\AdminProductConfirm.cs" />
     <Compile Include="Models\Buy.cs" />
     <Compile Include="Models\Cuzdanim.cs" />
+    <Compile Include="Models\Dukkanim.cs" />
     <Compile Include="Models\Login.cs" />
+    <Compile Include="Models\NewProduct.cs" />
     <Compile Include="Models\Register.cs" />
+    <Compile Include="Models\Urun.cs" />
     <Compile Include="Models\ViewModel.cs" />
     <Compile Include="Models\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -202,6 +209,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Buy.cshtml" />
+    <Content Include="Views\Product\YeniUrun.cshtml" />
+    <Content Include="Views\Product\UrunEkle.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

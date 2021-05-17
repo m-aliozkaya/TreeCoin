@@ -1,0 +1,81 @@
+﻿@model TreeCoinUI.Models.Admin
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+
+    <h1 class="mb-4">Onay Bekleyen Ürünler</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ürün Adı</th>
+                <th>Ürün Resmi</th>
+                <th>Ölçü Birimi</th>
+                <th style="width:150px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Image</td>
+                    <td>@item.QuantityType</td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("Index", "Admin", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" value="@item.Id" name="Id" />
+                            <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="Sil">
+                            <input name="submit" type="submit" class="btn btn-success btn-sm mr-2 font-weight-bold" value="Onayla">
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+
+    <h1 class="mb-4 mt-5">Para Onayları</h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Kullanıcı Id</th>
+                <th>Tutar</th>
+                <th style="width:150px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.MoneyConfirms)
+            {
+                <tr>
+                    <td>@item.CustomerId</td>
+                    <td>@item.Money</td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("ConfirmMoney", "Admin", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" value="@item.Id" name="Id" />
+                            <input type="hidden" value="@item.CustomerId" name="CustomerId" />
+                            <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="Sil">
+                            <input name="submit" type="submit" class="btn btn-success btn-sm mr-2 font-weight-bold" value="Onayla">
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
