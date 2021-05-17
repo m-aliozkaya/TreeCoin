@@ -479,11 +479,29 @@ a:active {
 /******** Footer Bottom CSS *******/
 /**********************************/
 .footer-bottom {
-    position: relative;
+    position: absolute;
+    height: 2.5rem;
+    width: 100%;
+    bottom: 0;
     padding: 10px 0;
     font-size: 14px;
     background: #c9d439;
 }
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 5rem; /* Footer height */
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
 
     .footer-bottom .copyright {
         text-align: left;
@@ -538,11 +556,3 @@ a:active {
     margin-top: 20px;
 }
 
-    .product .card {
-        height: 450px;
-    }
-
-    .product .btn btn-success {
-        position: absolute;
-        bottom: 1.25rem;
-    }

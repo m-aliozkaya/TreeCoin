@@ -5,17 +5,14 @@ using System.Web;
 
 namespace TreeCoinUI.Entity
 {
-    public class Order
+    public class FinanceHistory
     {
         public int Id { get; set; }
-        public int SupplierId { get; set; }
         public int CustomerId { get; set; }
-        public int ProductId { get; set; }
+        public int FinanceTypeId { get; set; }
+        public double Money { get; set; }
         public DateTime Date { get; set; }
-        public int QuantityValue { get; set; }
-        public double Price { get; set; }
-        public Supplier Supplier { get; set; }
         public Customer Customer { get; set; }
-        public Product Product { get; set; }
+        public FinanceType FinanceType { get; set; }
     }
 }

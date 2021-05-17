@@ -4,27 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TreeCoinUI.Entity;
+using TreeCoinUI.Identity;
 
 namespace TreeCoinUI.Controllers
 {
     public class HomeController : Controller
     {
-        DataContext _context = new DataContext();
+        IdentityDataContext _context = new IdentityDataContext();
         
         // GET: Home
         public ActionResult Index()
         {
-            return View(_context.Products.ToList());
-        }
-
-        public ActionResult Shop()
-        {
-            return View();
-        }
-
-        public ActionResult Wallet()
-        {
-            return View();
+            return View(_context.Products.Where(product => product.IsApproved == true).ToList());
         }
     }
 }

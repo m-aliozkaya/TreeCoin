@@ -1,0 +1,67 @@
+﻿
+<div class="navbar-nav col-xs-6 ml-auto mr-3">
+    @if (Request.IsAuthenticated)
+    {
+        <div class="nav-item dropdown dropdown-menu-end">
+            <a href="#" class="nav-link" data-toggle="dropdown">
+                <div class="row p-0 m-0 d-flex align-items-center">
+                    <div class="mr-2">
+                    </div>
+                    <div style="font-size: 17px">
+                        <span> <b>Muhammed Ali</b></span>
+                    </div>
+                    <div style="font-size: 12px;">
+                        <i class="fas fa-angle-down fa-fw"></i>
+                    </div>
+                    @if (!User.IsInRole("admin"))
+                    {
+                        <div style="font-size: 12px">
+                            <span> <b> 35,83$</b></span>
+                        </div>
+                    }
+                </div>
+            </a>
+
+            @if (User.IsInRole("customer"))
+            {
+                @Html.Partial("_CustomerPartial");
+            } else if (User.IsInRole("supplier"))
+            {
+                @Html.Partial("_SupplierPartial");
+            }
+            else
+            {
+                @Html.Partial("_AdminPartial");
+            }
+        </div>
+    }
+    else
+    {
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link" data-toggle="dropdown">
+                <div class="row p-0 m-0 d-flex align-items-center"
+                     style="border: #7c4d25 1px solid; border-radius: 5px">
+                    <div style="font-size: 14px" class="mr-2">
+                        <i class="fas fa-user fa-2x fa-fw"></i>
+                    </div>
+                    <div style="font-size: 18px" class="col">
+                        <span class="row"> <b>Giriş Yap</b></span>
+                        <span style="font-size: 12px" class="row">
+                            veya Üye Ol
+                        </span>
+                    </div>
+                    <div style="font-size: 12px" class="ml-2">
+                        <i class="fas fa-angle-down fa-2x fa-fw"></i>
+                    </div>
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="#modalLogin" class="dropdown-item" data-toggle="modal">Login</a>
+                <a href="#modalRegister"
+                   class="dropdown-item"
+                   data-toggle="modal">Register</a>
+            </div>
+        </div>
+    }
+
+</div>
