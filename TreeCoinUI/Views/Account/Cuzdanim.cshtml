@@ -1,4 +1,7 @@
-﻿
+﻿@using TreeCoinUI.Models
+@model Cuzdanim
+
+
 @{
     ViewBag.Title = "Cuzdanim";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,7 +19,7 @@
                         <i class="fas fa-wallet fa-2x mr-3"></i>
                         <div class="d-flex flex-column">
                             <span><small>Bakiye</small></span>
-                            <span class="text-wallet text-success"></span>
+                            <span class="text-wallet text-success">@Model.Bakiye$</span>
                         </div>
                     </div>
                 </div>
@@ -26,23 +29,42 @@
             <div class="card-title">
                 <h4 class="mb-4">Para Yükle</h4>
             </div>
-            <form action="">
-                <div class="card-text">
-                    <div class="form-row m-0 align-items-center justify-content-center">
-                        <h4>
-                            <span class="badge bg-danger text-white mr-2">50 TL</span>
-                            <span class="badge bg-danger text-white mr-2">100 TL</span>
-                            <span class="badge bg-danger text-white mr-2">70 TL</span>
-                        </h4>
-                        <span class="ml-1 mr-3 align-middle">veya</span>
-                        <input class="form-control mb-0 col-md-6"
-                               type="text"
-                               placeholder="Bir tutar giriniz" />
-                        <div class="mx-auto">
-                            <button class="btn btn-success mt-2">Bakiye Yükle</button>
+
+            @using (Html.BeginForm("LoadMoney", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" value="@ViewBag.CustomerId" name="Id" />
+
+                <div class="form-horizontal p-4">
+
+                    <div class="card-text">
+                        <div class="form-row m-0 align-items-center justify-content-center">
+                            <h4>
+                                @using (Html.BeginForm())
+                                {
+                                    <input type="hidden" value="@ViewBag.CustomerId" name="Id" />
+                                    <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="50 TL">
+                                    <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value = "100 TL">
+                                    <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="200 TL">
+                                }
+
+                            </h4>
+                            <span class="ml-1 mr-3 align-middle">veya</span>
+                            <input class="form-control mb-0 col-md-6"
+                                   type="text"
+                                   name="Quantity"
+                                   placeholder="Bir tutar giriniz" />
+                            <div class="mx-auto">
+                                <button type="submit" class="btn btn-success mt-2">Bakiye Yükle</button>
+                            </div>
                         </div>
                     </div>
+
                 </div>
+            }
+
+            <form action="">
             </form>
             <div class="card mt-5">
                 <div class="card-header bg-primary text-white">İşlem Geçmişi</div>
@@ -58,18 +80,59 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>+100</td>
-                                    <td>Bakiye Yükleme</td>
-                                    <td>23.05.2019</td>
-                                    <td>Onaylandı</td>
-                                </tr>
-                                <tr>
-                                    <td>- 300</td>
-                                    <td>Alışveriş</td>
-                                    <td>23.05.2021</td>
-                                    <td colspan="0"></td>
-                                </tr>
+
+                                @foreach (var item in Model.FinanceHistory)
+                                {
+                                    <tr>
+
+                                        @if (item.FinanceTypeId == 1)
+                                        {
+                                            <td> +@item.Money </td>
+                                        }
+                                        else if (item.FinanceTypeId == 2)
+                                        {
+                                            <td> - @item.Money </td>
+                                        }
+                                        else
+                                        {
+                                            <td>  </td>
+                                        }
+
+                                        @if (item.FinanceTypeId == 1)
+                                        {
+                                            <td> Bakiye Yükleme </td>
+                                        }
+                                        else if (item.FinanceTypeId == 2)
+                                        {
+                                            <td> Alışveriş </td>
+                                        }
+                                        else
+                                        {
+                                            <td> Başarısız İşlem </td>
+                                        }
+
+
+                                        <td>@item.Date</td>
+
+
+                                        @if (item.FinanceTypeId == 1)
+                                        {
+                                            <td> Onaylandı </td>
+                                        }
+                                        else if (item.FinanceTypeId == 3)
+                                        {
+                                            <td> Para Onayı Başarısız </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+
+                                    </tr>
+                                }
+
+
+
                             </tbody>
                         </table>
                     </div>

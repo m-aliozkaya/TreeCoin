@@ -175,6 +175,7 @@
     <Compile Include="Identity\IdentityDataContext.cs" />
     <Compile Include="Identity\IdentityDataInitializer.cs" />
     <Compile Include="Models\Buy.cs" />
+    <Compile Include="Models\Cuzdanim.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Register.cs" />
     <Compile Include="Models\ViewModel.cs" />

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TreeCoinUI.Entity;
 using TreeCoinUI.Identity;
 using TreeCoinUI.Models;
 
@@ -34,7 +35,54 @@ namespace TreeCoinUI.Controllers
 
         public ActionResult Cuzdanim()
         {
-            return View();
+            var userId = User.Identity.GetUserId();
+            var bakiye = _context.Users.Find(userId).Money;
+            var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            var finans = _context.FinanceHistories.Where(f => f.CustomerId == customer.Id).OrderByDescending(f => f.Date);
+
+            ViewBag.CustomerId = customer.Id;
+
+            Cuzdanim model;
+
+            if (finans.Count() != 0 )
+            {
+                model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = finans.ToList() };
+            } else
+            {
+                model = new Cuzdanim() { Bakiye = bakiye };
+            }
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult LoadMoney(int Id, string submit)
+        {
+            int money;
+
+            switch (submit)
+            {
+                case "50 TL":
+                    money = 50;
+                    break;
+                case "100 TL":
+                    money = 100;
+                    break; 
+                case "200 TL":
+                    money = 200;
+                    break;
+                default:
+                    throw new Exception();
+            }
+
+            var moneyConfirm = new MoneyConfirm() { Money = money, CustomerId = Id };
+
+            _context.MoneyConfirms.Add(moneyConfirm);
+            _context.SaveChanges();
+            
+            return RedirectToAction("Cuzdanim");
         }
 
         public ActionResult Register()

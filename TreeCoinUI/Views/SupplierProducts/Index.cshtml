@@ -24,9 +24,7 @@
         <th>
             @Html.DisplayNameFor(model => model.QuantityValue)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsApproved)
-        </th>
+
         <th></th>
     </tr>
 
@@ -43,9 +41,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.QuantityValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsApproved)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
