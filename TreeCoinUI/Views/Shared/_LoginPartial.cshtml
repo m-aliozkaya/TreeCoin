@@ -1,4 +1,9 @@
-﻿
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@using TreeCoinUI.Identity
+
+
+
 <div class="navbar-nav col-xs-6 ml-auto mr-3">
     @if (Request.IsAuthenticated)
     {
@@ -8,7 +13,7 @@
                     <div class="mr-2">
                     </div>
                     <div style="font-size: 17px">
-                        <span> <b>Muhammed Ali</b></span>
+                        <span> <b>@User.Identity.Name</b></span>
                     </div>
                     <div style="font-size: 12px;">
                         <i class="fas fa-angle-down fa-fw"></i>
@@ -16,7 +21,20 @@
                     @if (!User.IsInRole("admin"))
                     {
                         <div style="font-size: 12px">
-                            <span> <b> 35,83$</b></span>
+                            <span>
+                                @{
+                                    if (User.Identity.IsAuthenticated)
+                                    {
+                                        var userStore = new UserStore<ApplicationUser>(new IdentityDataContext());
+                                        var manager = new UserManager<ApplicationUser>(userStore);
+                                        var currentUser = manager.FindById(User.Identity.GetUserId());
+
+                                        var money = currentUser.Money;
+                                        <b>@money$</b>
+                                    }
+
+                                }
+                            </span>
                         </div>
                     }
                 </div>
@@ -25,7 +43,8 @@
             @if (User.IsInRole("customer"))
             {
                 @Html.Partial("_CustomerPartial");
-            } else if (User.IsInRole("supplier"))
+            }
+            else if (User.IsInRole("supplier"))
             {
                 @Html.Partial("_SupplierPartial");
             }
@@ -56,10 +75,9 @@
                 </div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="#modalLogin" class="dropdown-item" data-toggle="modal">Login</a>
-                <a href="#modalRegister"
-                   class="dropdown-item"
-                   data-toggle="modal">Register</a>
+                <a href="/Account/Login" class="dropdown-item">Login</a>
+                <a href="/Account/Register"
+                   class="dropdown-item">Register</a>
             </div>
         </div>
     }

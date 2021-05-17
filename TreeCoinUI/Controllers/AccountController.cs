@@ -37,9 +37,10 @@ namespace TreeCoinUI.Controllers
             return View();
         }
 
-        // GET: Account
         public ActionResult Register()
         {
+            var roles = RoleManager.Roles.Where(r => r.Name != "admin").ToList();
+            ViewBag.RoleId = new SelectList(roles, "Id", "Name");
             return View();
         }
 
@@ -61,29 +62,26 @@ namespace TreeCoinUI.Controllers
                 user.Tc = model.Tc;
 
                 var result = UserManager.Create(user, model.Password);
+                var role = RoleManager.FindById(model.RoleId).Name;
 
                 if (result.Succeeded)
-                {
-                    //kullanıcı oluştu ve kullanıcıyı bir role atayabilirsiniz.
-                    if (RoleManager.RoleExists("user"))
-                    {
-                        UserManager.AddToRole(user.Id, "user");
-                    }
-                    return RedirectToAction("Login", "Account");
+                {              
+                       UserManager.AddToRole(user.Id, role);
+                    
+                    return RedirectToAction("Login");
+
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Kullanıcı  oluşturma hatası.");
+                    ModelState.AddModelError("", "Kullanıcı  oluşturulamadı.");
                 }
 
             }
-
+            var roles = RoleManager.Roles.Where(r => r.Name != "admin").ToList();
+            ViewBag.RoleId = new SelectList(roles, "Id", "Name", model.RoleId);
             return View(model);
         }
 
-
-
-        // GET: Account
         public ActionResult Login()
         {
             return View();
@@ -118,12 +116,13 @@ namespace TreeCoinUI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Böyle bir kullanıcı yok.");
+                    ModelState.AddModelError("", "Kullanıcı adı veya Şifre Yanlış.");
                 }
             }
 
-            return View(model);
+            return View();
         }
+
 
         public ActionResult Logout()
         {

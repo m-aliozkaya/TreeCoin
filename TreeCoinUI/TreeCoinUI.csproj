@@ -174,8 +174,10 @@
     <Compile Include="Identity\ApplicationUser.cs" />
     <Compile Include="Identity\IdentityDataContext.cs" />
     <Compile Include="Identity\IdentityDataInitializer.cs" />
+    <Compile Include="Models\Buy.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Register.cs" />
+    <Compile Include="Models\ViewModel.cs" />
     <Compile Include="Models\Wallet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -190,14 +192,15 @@
     <Content Include="Views\SupplierProducts\Details.cshtml" />
     <Content Include="Views\SupplierProducts\Edit.cshtml" />
     <Content Include="Views\SupplierProducts\Index.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_CustomerPartial.cshtml" />
     <Content Include="Views\Shared\_SupplierPartial.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_AdminPartial.cshtml" />
     <Content Include="Views\Account\Dukkanim.cshtml" />
     <Content Include="Views\Account\Cuzdanim.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Home\Buy.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

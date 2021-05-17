@@ -18,6 +18,10 @@ namespace TreeCoinUI.Models
         public string SurName { get; set; }
 
         [Required]
+        [DisplayName("Kayıt Türü")]
+        public string RoleId { get; set; }
+
+        [Required]
         [DisplayName("TC Kimlik No")]
         public string Tc { get; set; }
 
