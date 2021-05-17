@@ -9,6 +9,7 @@ using TreeCoinUI.Models;
 
 namespace TreeCoinUI.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         IdentityDataContext _context = new IdentityDataContext();

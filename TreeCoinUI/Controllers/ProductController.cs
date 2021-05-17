@@ -10,6 +10,7 @@ using TreeCoinUI.Models;
 
 namespace TreeCoinUI.Controllers
 {
+    [Authorize(Roles = "supplier")]
     public class ProductController : Controller
     {
         IdentityDataContext _context = new IdentityDataContext();

@@ -159,7 +159,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\SupplierProductsController.cs" />
     <Compile Include="Entity\Customer.cs" />
     <Compile Include="Entity\FinanceType.cs" />
     <Compile Include="Entity\MoneyConfirm.cs" />
@@ -195,11 +194,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\SupplierProducts\Create.cshtml" />
-    <Content Include="Views\SupplierProducts\Delete.cshtml" />
-    <Content Include="Views\SupplierProducts\Details.cshtml" />
-    <Content Include="Views\SupplierProducts\Edit.cshtml" />
-    <Content Include="Views\SupplierProducts\Index.cshtml" />
     <Content Include="Views\Shared\_CustomerPartial.cshtml" />
     <Content Include="Views\Shared\_SupplierPartial.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />

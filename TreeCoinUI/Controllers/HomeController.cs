@@ -10,11 +10,13 @@ using TreeCoinUI.Models;
 
 namespace TreeCoinUI.Controllers
 {
+    [Authorize(Roles = "customer, admin")]
     public class HomeController : Controller
     {
         IdentityDataContext _context = new IdentityDataContext();
         
         // GET: Home
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_context.Products.Where(product => product.IsApproved == true).ToList());
@@ -22,6 +24,7 @@ namespace TreeCoinUI.Controllers
 
         public ActionResult Buy(int id)
         {
+            ViewBag.Success = null;
             var buy = new Buy() {ProductId = id };
             return View(buy);
         }       
@@ -34,6 +37,10 @@ namespace TreeCoinUI.Controllers
             var supplierProducts = _context.SupplierProducts.Where(p => p.ProductId == model.ProductId).OrderBy(sp => sp.Price);
             var money = user.Money;
             var wantedQuantity = model.Quantity;
+            var productName = _context.Products.Find(model.ProductId).Name;
+
+            int toplamAlinan = 0;
+            double toplamTutar = 0;
 
             Dictionary<int, double> idMoney = new Dictionary<int, double>();
 
@@ -45,6 +52,8 @@ namespace TreeCoinUI.Controllers
                     wantedQuantity -= item.QuantityValue;
                     idMoney.Add(item.SupplierId, item.Price * item.QuantityValue);
                     item.QuantityValue = 0;
+                    toplamAlinan += item.QuantityValue;
+                    toplamTutar += item.Price * item.QuantityValue;
                 }
                 else
                 {
@@ -54,11 +63,15 @@ namespace TreeCoinUI.Controllers
                     {
                         item.QuantityValue -= wantedQuantity;
                         money -= neKadar * item.Price;
+                        toplamTutar += neKadar * item.Price;
+                        toplamAlinan += neKadar;
                     }
                     else
                     {
                         item.QuantityValue -= neKadar;
                         money -= neKadar * item.Price;
+                        toplamTutar += neKadar * item.Price;
+                        toplamAlinan += neKadar;
                     }
 
                     idMoney.Add(item.SupplierId, neKadar * item.Price);
@@ -79,6 +92,8 @@ namespace TreeCoinUI.Controllers
 
             _context.SaveChanges();
 
+            ViewBag.Success = true;
+            ViewBag.Message = $"{toplamAlinan} tane {productName} {toplamTutar} TL'den alındı ";
             return View(model);
         }
     }

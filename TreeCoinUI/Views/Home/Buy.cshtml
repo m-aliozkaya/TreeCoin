@@ -10,6 +10,22 @@
 
 <h2>Buy</h2>
 
+@if (ViewBag.Success == true)
+{
+    <div class="alert alert success">
+        @ViewBag.Message
+    </div>
+}
+else if (ViewBag.Success == false)
+{
+    <div class="alert alert danger">
+        Ürün Alımı Başarısız
+    </div>
+} else
+{
+
+}
+
 @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -23,7 +39,7 @@
                 @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" }, @type = "number" })
                 @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
             </div>
-        </div>        
+        </div>
 
         <input type="submit" value="Satın Al" class="btn btn-primary btn-block col-md-5 offset-md-6 mt-4" />
 
