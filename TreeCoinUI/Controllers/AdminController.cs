@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -63,6 +64,8 @@ namespace TreeCoinUI.Controllers
         {
             var moneyConfirm = _context.MoneyConfirms.Find(Id);
             var financeHistory = new FinanceHistory() { CustomerId = CustomerId, Date = DateTime.Now, Money = moneyConfirm.Money };
+            var userId = _context.Customers.Find(CustomerId).UserId;
+            var user = _context.Users.Find(userId);
 
             switch (submit)
             {
@@ -73,6 +76,7 @@ namespace TreeCoinUI.Controllers
                 case "Onayla":
                      financeHistory.FinanceTypeId = 1;
                     _context.FinanceHistories.Add(financeHistory);
+                    user.Money += moneyConfirm.Money;
                     break;
                 default:
                     throw new Exception();

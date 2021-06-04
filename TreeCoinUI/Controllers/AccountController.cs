@@ -68,9 +68,9 @@ namespace TreeCoinUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult LoadMoney(int Id, string submit)
+        public ActionResult LoadMoney(int Id, string submit, int Quantity = 0)
         {
-            int money;
+            int money = 0;
 
             switch (submit)
             {
@@ -84,7 +84,8 @@ namespace TreeCoinUI.Controllers
                     money = 200;
                     break;
                 default:
-                    throw new Exception();
+                    money = Quantity;
+                    break;
             }
 
             var moneyConfirm = new MoneyConfirm() { Money = money, CustomerId = Id };
@@ -135,6 +136,7 @@ namespace TreeCoinUI.Controllers
                 }
 
             }
+
             var roles = RoleManager.Roles.Where(r => r.Name != "admin").ToList();
             ViewBag.RoleId = new SelectList(roles, "Id", "Name", model.RoleId);
             return View(model);
