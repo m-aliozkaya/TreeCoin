@@ -70,7 +70,7 @@ namespace TreeCoinUI.Controllers
         [HttpPost]
         public ActionResult LoadMoney(int Id, string submit, int Quantity = 0)
         {
-            int money = 0;
+            int money;
 
             switch (submit)
             {

@@ -130,9 +130,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\css\login.css" />
     <Content Include="Global.asax" />
     <Content Include="Images\products\arpa.jpg" />
     <None Include="Scripts\jquery-1.4.4-vsdoc.js" />
+    <Content Include="Images\star-sky.jpg" />
     <Content Include="Scripts\jquery-1.4.4.js" />
     <Content Include="Scripts\jquery-1.4.4.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
