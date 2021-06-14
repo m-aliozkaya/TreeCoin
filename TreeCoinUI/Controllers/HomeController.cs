@@ -25,6 +25,7 @@ namespace TreeCoinUI.Controllers
         public ActionResult Buy(int id)
         {
             ViewBag.Success = null;
+            ViewBag.Product = _context.Products.Find(id);
             var buy = new Buy() { ProductId = id };
             return View(buy);
         }

@@ -174,6 +174,8 @@ namespace TreeCoinUI.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+
+                // Kullanıcı Giriş Yapamadı Hata Ekle
                 else
                 {
                     ModelState.AddModelError("", "Kullanıcı adı veya Şifre Yanlış.");
@@ -182,7 +184,6 @@ namespace TreeCoinUI.Controllers
 
             return View();
         }
-
 
         public ActionResult Logout()
         {
