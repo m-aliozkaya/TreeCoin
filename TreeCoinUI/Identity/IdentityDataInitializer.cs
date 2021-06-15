@@ -93,6 +93,27 @@ namespace TreeCoinUI.Identity
                 manager.Create(role);
             }
 
+            if (!context.Roles.Any(i => i.Name == "accountant"))
+            {
+                var store = new RoleStore<ApplicationRole>(context);
+                var manager = new RoleManager<ApplicationRole>(store);
+
+                var role = new ApplicationRole() { Name = "accountant" };
+
+                manager.Create(role);
+            }
+
+            if (!context.Users.Any(i => i.Name == "accountantUser"))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+
+               var user = new ApplicationUser() { Name = "System", UserName = "accountantUser", Money = 0};
+
+                manager.Create(user, "1234567");
+                manager.AddToRole(user.Id, "accountant");
+            }
+
             if (!context.Users.Any(i => i.Name == "krai"))
             {
                 var store = new UserStore<ApplicationUser>(context);
@@ -134,7 +155,7 @@ namespace TreeCoinUI.Identity
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
 
-                var user = new ApplicationUser() { Name = "Muhammed Emin", SurName = "Fırat", UserName = "ascarris", Email = "ascarris@ascarris.com", Date = DateTime.Now, Money = 50, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Amasya" };
+                var user = new ApplicationUser() { Name = "Muhammed Emin", SurName = "Fırat", UserName = "ascarris", Email = "ascarris@ascarris.com", Date = DateTime.Now, Money = 350, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Amasya" };
 
                 manager.Create(user, "1234567");
                 manager.AddToRole(user.Id, "supplier");

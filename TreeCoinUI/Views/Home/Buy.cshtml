@@ -3,21 +3,17 @@
 
 @model TreeCoinUI.Models.Buy
 
-@{
+@{ 
     ViewBag.Title = "Buy";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container col-md-7 p-4">
+<div class="container col-md-8 p-4">
 
     <style>
         .card {
             flex-direction: row;
         }
 
-            .card img {
-                width: 50%;
-            }
     </style>
 
     <div class="card">
@@ -37,11 +33,6 @@
                     Ürün Alımı Başarısız
                 </div>
             }
-            else
-            {
-
-            }
-
 
             @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
             {
