@@ -14,6 +14,10 @@
             flex-direction: row;
         }
 
+        .card img{
+            width:400px;
+        }
+
     </style>
 
     <div class="card">
@@ -30,7 +34,7 @@
             else if (ViewBag.Success == false)
             {
                 <div class="alert alert danger">
-                    Ürün Alımı Başarısız
+                    @ViewBag.Message
                 </div>
             }
 

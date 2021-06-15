@@ -21,7 +21,6 @@ namespace TreeCoinUI.Identity
         public DbSet<Product> Products { get; set; }
         public DbSet<SupplierProduct> SupplierProducts { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<MoneyConfirm> MoneyConfirms { get; set; }
         public DbSet<FinanceHistory> FinanceHistories { get; set; }
         public DbSet<FinanceType> FinanceTypes { get; set; }
 
@@ -54,8 +53,6 @@ namespace TreeCoinUI.Identity
                 .WithMany(t => t.Orders)
                 .HasForeignKey(d => d.SupplierId)
                 .WillCascadeOnDelete(false);
-
-
 
         }
     }

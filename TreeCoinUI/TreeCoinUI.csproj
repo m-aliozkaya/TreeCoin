@@ -163,7 +163,6 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Entity\Customer.cs" />
     <Compile Include="Entity\FinanceType.cs" />
-    <Compile Include="Entity\MoneyConfirm.cs" />
     <Compile Include="Entity\Order.cs" />
     <Compile Include="Entity\Product.cs" />
     <Compile Include="Entity\Quantity.cs" />

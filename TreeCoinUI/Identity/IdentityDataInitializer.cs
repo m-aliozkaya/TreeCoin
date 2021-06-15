@@ -53,8 +53,9 @@ namespace TreeCoinUI.Identity
             List<FinanceType> financeTypes = new List<FinanceType>
             {
                 new FinanceType(){Name = "load"},
-                new FinanceType(){Name = "purchase"},
+                new FinanceType(){Name = "onProcess"},
                 new FinanceType(){Name = "failed"},
+                new FinanceType(){Name = "purchase"},
             };
 
             foreach (var item in financeTypes)
@@ -143,7 +144,7 @@ namespace TreeCoinUI.Identity
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
 
-                var user = new ApplicationUser() { Name = "Alper", SurName = "Kuru", UserName = "99lp", Email = "99lp@99lp.com", Date = DateTime.Now, Money = 50, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Ordu" };
+                var user = new ApplicationUser() { Name = "Alper", SurName = "Kuru", UserName = "99lp", Email = "99lp@99lp.com", Date = DateTime.Now, Money = 150, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Ordu" };
 
                 manager.Create(user, "1234567");
                 manager.AddToRole(user.Id, "customer");
@@ -179,8 +180,8 @@ namespace TreeCoinUI.Identity
             /* Suppliers start */
             List<Supplier> suppliers = new List<Supplier>()
             {
-                new Supplier(){UserId = userIds["bazig"]},
-                new Supplier(){UserId = userIds["krebs"]}
+                new Supplier(){UserId = userIds["krebs"]},
+                new Supplier(){UserId = userIds["ascarris"]}
             };
 
             foreach (var item in suppliers)
@@ -194,7 +195,7 @@ namespace TreeCoinUI.Identity
             List<Customer> customers = new List<Customer>()
             {
                 new Customer(){UserId = userIds["99lp"]},
-                new Customer(){UserId = userIds["ascarris"]}
+                new Customer(){UserId = userIds["bazig"]}
             };
 
             foreach (var item in customers)
@@ -244,22 +245,6 @@ namespace TreeCoinUI.Identity
             /* OrderSuppliers end */
 
             context.SaveChanges();
-
-            /* MoneyConfirms start */
-            List<MoneyConfirm> moneyConfirms = new List<MoneyConfirm>()
-            {
-                new MoneyConfirm(){IsApproved = false, Money = 50, CustomerId = 1},
-                new MoneyConfirm(){IsApproved = false, Money = 60, CustomerId = 1 },
-                new MoneyConfirm(){IsApproved = true, Money = 70, CustomerId = 2},
-                new MoneyConfirm(){IsApproved = true, Money = 800, CustomerId = 2},
-                new MoneyConfirm(){IsApproved = false, Money = 80, CustomerId = 2}
-            };
-
-            foreach (var item in moneyConfirms)
-            {
-                context.MoneyConfirms.Add(item);
-            }
-            /* MoneyConfirms end */
 
             /* FinanceHistory start */
             List<FinanceHistory> financeHistories = new List<FinanceHistory>()

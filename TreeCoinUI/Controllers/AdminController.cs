@@ -26,11 +26,9 @@ namespace TreeCoinUI.Controllers
                 Id = p.Id
             }).ToList();
 
-            /*            var products = _context.Products.Where(p => p.IsApproved == false).ToList();
-            */
-            var moneyConfirms = _context.MoneyConfirms.Where(m => m.IsApproved == false).ToList();
+            var financeHistories = _context.FinanceHistories.Where(f => f.FinanceTypeId == 2).ToList();
 
-            var model = new Admin() { Products = products, MoneyConfirms = moneyConfirms};
+            var model = new Admin() { Products = products, FinanceHistories = financeHistories };
 
             return View(model);
         }
@@ -62,8 +60,7 @@ namespace TreeCoinUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ConfirmMoney(string submit, int CustomerId, int Id)
         {
-            var moneyConfirm = _context.MoneyConfirms.Find(Id);
-            var financeHistory = new FinanceHistory() { CustomerId = CustomerId, Date = DateTime.Now, Money = moneyConfirm.Money };
+            var financeHistory = _context.FinanceHistories.Find(Id);
             var userId = _context.Customers.Find(CustomerId).UserId;
             var user = _context.Users.Find(userId);
 
@@ -71,20 +68,16 @@ namespace TreeCoinUI.Controllers
             {
                 case "Sil":
                     financeHistory.FinanceTypeId = 3;
-                    _context.FinanceHistories.Add(financeHistory);
                     break;
                 case "Onayla":
                      financeHistory.FinanceTypeId = 1;
-                    _context.FinanceHistories.Add(financeHistory);
-                    user.Money += moneyConfirm.Money;
+                    user.Money += financeHistory.Money;
                     break;
                 default:
                     throw new Exception();
             }
 
-            var moneyConfirmx = _context.MoneyConfirms.Remove(moneyConfirm);
-            Console.WriteLine(moneyConfirmx.ToString());
-
+            financeHistory.Date = DateTime.Now;
             _context.SaveChanges();
 
             return RedirectToAction("Index");

@@ -45,7 +45,7 @@
                                 {
                                     <input type="hidden" value="@ViewBag.CustomerId" name="Id" />
                                     <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="50 TL">
-                                    <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value = "100 TL">
+                                    <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="100 TL">
                                     <input name="submit" type="submit" class="btn btn-danger btn-sm mr-2 font-weight-bold" value="200 TL">
                                 }
 
@@ -83,52 +83,53 @@
 
                                 @foreach (var item in Model.FinanceHistory)
                                 {
-                                    <tr>
+                                <tr>
 
-                                        @if (item.FinanceTypeId == 1)
-                                        {
-                                            <td> +@item.Money </td>
-                                        }
-                                        else if (item.FinanceTypeId == 2)
-                                        {
-                                            <td> - @item.Money </td>
-                                        }
-                                        else
-                                        {
-                                            <td>  </td>
-                                        }
+                                    @if (item.FinanceTypeId == 4)
+                                    {
+                                        <td> - @item.Money </td>
+                                    }
+                                    else if (item.FinanceTypeId == 1)
+                                    {
+                                        <td> +@item.Money </td>
+                                    }
 
-                                        @if (item.FinanceTypeId == 1)
-                                        {
-                                            <td> Bakiye Yükleme </td>
-                                        }
-                                        else if (item.FinanceTypeId == 2)
-                                        {
-                                            <td> Alışveriş </td>
-                                        }
-                                        else
-                                        {
-                                            <td> Başarısız İşlem </td>
-                                        }
+                                    else
+                                    {
+                                        <td> @item.Money </td>
+                                    }
+
+                                    @if (item.FinanceTypeId == 4)
+                                    {
+                                        <td> Alışveriş </td>
+                                    }
+                                    else
+                                    {
+                                        <td> Bakiye Yükleme </td>
+                                    }
 
 
-                                        <td>@item.Date</td>
+                                    <td>@item.Date</td>
 
 
-                                        @if (item.FinanceTypeId == 1)
-                                        {
-                                            <td> Onaylandı </td>
-                                        }
-                                        else if (item.FinanceTypeId == 3)
-                                        {
-                                            <td> Para Onayı Başarısız </td>
-                                        }
-                                        else
-                                        {
-                                            <td></td>
-                                        }
+                                    @if (item.FinanceTypeId == 1)
+                                    {
+                                        <td> Onaylandı </td>
+                                    }
+                                    else if (item.FinanceTypeId == 2)
+                                    {
+                                        <td> İnceleniyor </td>
+                                    }
+                                    else if (item.FinanceTypeId == 3)
+                                    {
+                                        <td> Para Onayı Başarısız </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
 
-                                    </tr>
+                                </tr>
                                 }
 
 

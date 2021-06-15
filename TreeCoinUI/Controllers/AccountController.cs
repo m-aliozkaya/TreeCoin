@@ -88,9 +88,9 @@ namespace TreeCoinUI.Controllers
                     break;
             }
 
-            var moneyConfirm = new MoneyConfirm() { Money = money, CustomerId = Id };
+            FinanceHistory financeHistory = new FinanceHistory() { CustomerId = Id, Money = money, Date = DateTime.Now, FinanceTypeId = 2 };
+            _context.FinanceHistories.Add(financeHistory);
 
-            _context.MoneyConfirms.Add(moneyConfirm);
             _context.SaveChanges();
             
             return RedirectToAction("Cuzdanim");
