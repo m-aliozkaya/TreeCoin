@@ -65,6 +65,15 @@ namespace TreeCoinUI.Controllers
             return View(model);
         }
 
+        public ActionResult SatisGecmisim()
+        {
+            var userId = User.Identity.GetUserId();
+            var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            var model = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { CustomerId = o.CustomerId, Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue}).ToList();
+
+            return View(model);
+        }
 
         [ValidateAntiForgeryToken]
         [HttpPost]

@@ -57,7 +57,15 @@ namespace TreeCoinUI.Controllers
 
             foreach (var item in supplierProducts)
             {
+                
+                if (customerMoney < item.Price || wantedQuantity == 0)
+                {
+                    break;
+                }
+                
                 var supplier = _context.Users.Find(_context.Suppliers.Find(item.SupplierId).UserId);
+                var startValue = item.QuantityValue;
+                double supplierAmount = 0;
 
                 while (wantedQuantity > 0 && item.QuantityValue > 0)
                 {
@@ -72,8 +80,21 @@ namespace TreeCoinUI.Controllers
 
                     supplier.Money += item.Price;
                     amount += item.Price;
+                    supplierAmount += item.Price;
                     customerMoney -= item.Price;
                 }
+
+                Order order = new Order()
+                {
+                    CustomerId = customerId,
+                    Date = DateTime.Now,
+                    ProductId = item.ProductId,
+                    QuantityValue = startValue - item.QuantityValue,
+                    SupplierId = item.SupplierId,
+                    Price = supplierAmount
+                };
+
+                _context.Orders.Add(order);
             }
 
             if (amount > 0)
