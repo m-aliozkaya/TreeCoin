@@ -46,15 +46,17 @@
         <thead>
             <tr>
                 <th>Kullanıcı Id</th>
+                <th>Para Birimi</th>
                 <th>Tutar</th>
                 <th style="width:150px"></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.FinanceHistories)
+            @foreach (dynamic item in Model.MoneyConfirms)
             {
                 <tr>
                     <td>@item.CustomerId</td>
+                    <td>@item.MoneyCode</td>
                     <td>@item.Money</td>
                     <td class="text-center">
                         @using (Html.BeginForm("ConfirmMoney", "Admin", FormMethod.Post))

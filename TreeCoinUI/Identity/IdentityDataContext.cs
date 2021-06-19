@@ -23,6 +23,8 @@ namespace TreeCoinUI.Identity
         public DbSet<Order> Orders { get; set; }
         public DbSet<FinanceHistory> FinanceHistories { get; set; }
         public DbSet<FinanceType> FinanceTypes { get; set; }
+        public DbSet<MoneyType> MoneyTypes { get; set; }
+        public DbSet<LimitBuy> LimitBuys { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -53,7 +55,6 @@ namespace TreeCoinUI.Identity
                 .WithMany(t => t.Orders)
                 .HasForeignKey(d => d.SupplierId)
                 .WillCascadeOnDelete(false);
-
         }
     }
 }

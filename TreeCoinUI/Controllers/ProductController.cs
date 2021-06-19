@@ -14,6 +14,7 @@ namespace TreeCoinUI.Controllers
     public class ProductController : Controller
     {
         IdentityDataContext _context = new IdentityDataContext();
+        HomeController _controller = new HomeController();
 
         public ActionResult YeniUrun()
         {
@@ -53,6 +54,8 @@ namespace TreeCoinUI.Controllers
                 _context.SupplierProducts.Add(supplierProduct);
                 _context.SaveChanges();
 
+                _controller.LimitBuy(product.Id);
+    
                 return RedirectToAction("Dukkanim", "Account");
             }
 
@@ -101,6 +104,8 @@ namespace TreeCoinUI.Controllers
 
                 }
                 _context.SaveChanges();
+
+                _controller.LimitBuy(model.ProductId);
 
                 return RedirectToAction("Dukkanim", "Account");
             }

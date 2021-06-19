@@ -10,9 +10,11 @@ namespace TreeCoinUI.Entity
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public int FinanceTypeId { get; set; }
+        public int MoneyTypeId { get; set; }
         public double Money { get; set; }
         public DateTime Date { get; set; }
         public Customer Customer { get; set; }
         public FinanceType FinanceType { get; set; }
+        public MoneyType MoneyType { get; set; }
     }
 }

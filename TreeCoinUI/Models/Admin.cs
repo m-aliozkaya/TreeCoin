@@ -9,6 +9,6 @@ namespace TreeCoinUI.Models
     public class Admin
     {
         public List<AdminProductConfirm> Products { get; set; }
-        public List<FinanceHistory> FinanceHistories { get; set; }
+        public List<FinanceHistoryModel> MoneyConfirms { get; set; }
     }
 }

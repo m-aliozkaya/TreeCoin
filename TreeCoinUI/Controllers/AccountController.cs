@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using TreeCoinUI.Entity;
@@ -47,7 +51,22 @@ namespace TreeCoinUI.Controllers
             var bakiye = _context.Users.Find(userId).Money;
             var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
 
-            var finans = _context.FinanceHistories.Where(f => f.CustomerId == customer.Id).OrderByDescending(f => f.Date);
+            var finans = _context.FinanceHistories
+                .Where(f => f.CustomerId == customer.Id)
+                .Join(_context.MoneyTypes, f => f.MoneyTypeId, m => m.Id, (f,m) => new {f.FinanceTypeId, f.Date, f.CustomerId, f.Money, f.MoneyTypeId, m.Code, f.Id  })
+                .ToList();
+
+            var financeHistories = finans.Select(f => new FinanceHistory
+            {
+                FinanceTypeId = f.FinanceTypeId,
+                CustomerId = f.CustomerId,
+                Date = f.Date,
+                Money = f.Money,
+                Id = f.Id,
+                MoneyType = new MoneyType {Code = f.Code },
+                MoneyTypeId = f.MoneyTypeId
+            }).OrderByDescending(f => f.Date).ToList();
+
 
             ViewBag.CustomerId = customer.Id;
 
@@ -55,7 +74,7 @@ namespace TreeCoinUI.Controllers
 
             if (finans.Count() != 0 )
             {
-                model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = finans.ToList() };
+                model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = financeHistories };
             } else
             {
                 model = new Cuzdanim() { Bakiye = bakiye };
@@ -70,14 +89,138 @@ namespace TreeCoinUI.Controllers
             var userId = User.Identity.GetUserId();
             var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
 
-            var model = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { CustomerId = o.CustomerId, Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue}).ToList();
+            var model = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() {Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue}).ToList();
 
             return View(model);
         }
 
+        public ActionResult AlimRaporunuAl()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = _context.Users.Find(userId);
+            var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            List<string> infoList = new List<string>();
+            infoList.Add($"Kullanici Adi : {user.UserName}");
+            infoList.Add($"Ad : {user.Name}");
+            infoList.Add($"Soyad : {user.SurName}");
+            infoList.Add($"Email : {user.Email}");
+            infoList.Add($"Para : {user.Money}");
+
+            var history = _context.Orders.Where(o => o.CustomerId == customer.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+            return RaporAl(history, infoList);
+        }
+
+        public ActionResult SatisRaporunuAl()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = _context.Users.Find(userId);
+            var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
+
+            List<string> infoList = new List<string>();
+            infoList.Add($"Kullanici Adi : {user.UserName}");
+            infoList.Add($"Ad : {user.Name}");
+            infoList.Add($"Soyad : {user.SurName}");
+            infoList.Add($"Email : {user.Email}");
+            infoList.Add($"Para : {user.Money} TL");
+
+            var history = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+            return RaporAl(history, infoList);
+        }
+
+        public ActionResult RaporAl(List<SalesHistory> salesHistories, List<string> infos)
+        {
+            MemoryStream workStream = new MemoryStream();
+            //file name to be created 
+            string strPDFFileName = string.Format("TreeCoinRapor" + ".pdf");
+            Document doc = new Document();
+            doc.SetMargins(0f, 0f, 10f, 0f);
+   
+            //Create PDF Table with 5 columns
+            PdfPTable tableLayout = new PdfPTable(4);
+
+            PdfWriter.GetInstance(doc, workStream).CloseStream = false;
+            doc.Open();
+    
+            Paragraph paragraph = new Paragraph();
+            paragraph.IndentationLeft = 30;
+            paragraph.SpacingBefore = 30;
+
+            foreach (var item in infos)
+            {
+                Chunk chunk = new Chunk(item);
+                chunk.SetBackground(new BaseColor(128, 0, 0));
+                chunk.Font = FontFactory.GetFont("TimesNewRoman", 15, BaseColor.ORANGE);
+                paragraph.Add(chunk);
+                paragraph.Add(Chunk.NEWLINE);
+            }
+
+            doc.Add(paragraph);
+
+            Paragraph p = new Paragraph();
+            p.IndentationLeft = 30;
+            p.SpacingBefore = 20;
+            p.Add(CreateSalesHistoryTable(tableLayout, salesHistories));
+            doc.Add(p);
+            
+            // Closing the document
+            doc.Close();
+
+            byte[] byteInfo = workStream.ToArray();
+            workStream.Write(byteInfo, 0, byteInfo.Length);
+            workStream.Position = 0;
+
+            return File(workStream, "application/pdf", strPDFFileName);
+        }
+
+        protected PdfPTable CreateSalesHistoryTable(PdfPTable tableLayout, List<SalesHistory> salesHistories)
+        {
+            float[] headers = { 35, 35, 35, 35 };  //Header Widths
+            tableLayout.SetWidths(headers);
+            tableLayout.HorizontalAlignment = Element.ALIGN_LEFT; //Set the pdf headers
+            tableLayout.WidthPercentage = 60;       //Set the PDF File witdh percentage
+            tableLayout.HeaderRows = 1;
+            //Add Title to the PDF file at the top
+
+    
+            tableLayout.AddCell(new PdfPCell(new Phrase("Alim-Satim Geçmisi", new Font(Font.FontFamily.HELVETICA, 12, 1, new iTextSharp.text.BaseColor(0, 0, 0)))) { Colspan = 12, Border = 0, PaddingBottom = 5, HorizontalAlignment = Element.ALIGN_CENTER });
+
+            ////Add header
+            AddCellToHeader(tableLayout, "Ürün Ismi");
+            AddCellToHeader(tableLayout, "Ürün Miktar");
+            AddCellToHeader(tableLayout, "Tutar");
+            AddCellToHeader(tableLayout, "Tarih");
+
+            ////Add body
+          
+            foreach (var item in salesHistories)
+            {
+                AddCellToBody(tableLayout, item.ProductName);
+                AddCellToBody(tableLayout, item.QuantityValue.ToString());
+                AddCellToBody(tableLayout, item.Price.ToString());
+                AddCellToBody(tableLayout, item.Date.ToString());
+            }
+
+            return tableLayout;
+        }
+
+        // Method to add single cell to the Header
+        private static void AddCellToHeader(PdfPTable tableLayout, string cellText)
+        {
+
+            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 8, 1, iTextSharp.text.BaseColor.ORANGE))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(128, 0, 0) });
+        }
+
+        // Method to add single cell to the body
+        private static void AddCellToBody(PdfPTable tableLayout, string cellText)
+        {
+            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 8, 1, iTextSharp.text.BaseColor.BLACK))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(255, 255, 255) });
+        }
+
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult LoadMoney(int Id, string submit, int Quantity = 0)
+        public ActionResult LoadMoney(int Id, string submit, string rateCode, int Quantity = 0)
         {
             int money;
 

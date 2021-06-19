@@ -7,7 +7,6 @@ namespace TreeCoinUI.Models
 {
     public class SalesHistory
     {
-        public int CustomerId { get; set; }
         public string ProductName { get; set; }
         public DateTime Date { get; set; }
         public int QuantityValue { get; set; }

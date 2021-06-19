@@ -6,11 +6,22 @@
 }
 
 
-<div class="container p-3">
-    <h1>Satışlarım</h1>
 
+<div class="container p-3">
+    <div class="d-flex justify-content-between">
+        <h1>Satışlarım</h1>
+        <div class="d-flex align-items-end">
+            @Html.ActionLink("Pdf Olarak İndir", "SatisRaporunuAl", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
     <div class="card mt-5">
-        <div class="card-header bg-primary text-white">İşlem Geçmişi</div>
+        <div class="card-header bg-primary text-white">
+            <span>
+                İşlem Geçmişi
+            </span>
+
+
+        </div>
         <div class="card-body p-0 m-0">
             <div class="table-responsive-md">
                 <table class="table table-striped table-info m-0">
@@ -23,7 +34,6 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         @foreach (var item in Model)
                         {
 

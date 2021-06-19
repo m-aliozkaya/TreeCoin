@@ -12,5 +12,8 @@ namespace TreeCoinUI.Models
         [DisplayName("Alınacak Miktar")]
         public int Quantity { get; set; }
         public int ProductId { get; set; }
+
+        [DisplayName("Almak İstenen Fiyat")]
+        public int Price { get; set; }
     }
 }

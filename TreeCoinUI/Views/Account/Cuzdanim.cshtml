@@ -51,12 +51,19 @@
 
                             </h4>
                             <span class="ml-1 mr-3 align-middle">veya</span>
-                            <input class="form-control mb-0 col-md-6"
+                            <input class="form-control mb-0 col-md-5"
                                    type="text"
                                    name="Quantity"
                                    placeholder="Bir tutar giriniz" />
+                            <select required class="form-control col-md-2 mb-0 ml-2" name="rateCode">
+                                <option value="" disabled selected>Para birimini seçiniz</option>
+                                <option value="1">Türk Lirası</option>
+                                <option value="2">Dolar</option>
+                                <option value="3">Euro</option>
+                                <option value="4">Sterlin</option>
+                            </select>
                             <div class="mx-auto">
-                                <button type="submit" class="btn btn-success mt-2">Bakiye Yükle</button>
+                                <button type="submit" class="btn btn-success">Bakiye Yükle</button>
                             </div>
                         </div>
                     </div>
@@ -64,7 +71,13 @@
                 </div>
             }
 
-            <div class="card mt-5">
+            <div class="d-flex justify-content-end mt-5">
+                <div class="d-flex align-items-end">
+                    @Html.ActionLink("Pdf Olarak İndir", "AlimRaporunuAl", null, new { @class = "btn btn-secondary" })
+                </div>
+            </div>
+
+            <div class="card mt-2">
                 <div class="card-header bg-primary text-white">İşlem Geçmişi</div>
                 <div class="card-body p-0 m-0">
                     <div class="table-responsive-md">
@@ -81,53 +94,53 @@
 
                                 @foreach (var item in Model.FinanceHistory)
                                 {
-                                <tr>
+                                    <tr>
 
-                                    @if (item.FinanceTypeId == 4)
-                                    {
-                                        <td> - @item.Money </td>
-                                    }
-                                    else if (item.FinanceTypeId == 1)
-                                    {
-                                        <td> +@item.Money </td>
-                                    }
+                                        @if (item.FinanceTypeId == 4)
+                                        {
+                                            <td> - @item.Money @item.MoneyType.Code </td>
+                                        }
+                                        else if (item.FinanceTypeId == 1)
+                                        {
+                                            <td> +@item.Money @item.MoneyType.Code</td>
+                                        }
 
-                                    else
-                                    {
-                                        <td> @item.Money </td>
-                                    }
+                                        else
+                                        {
+                                            <td> @item.Money @item.MoneyType.Code</td>
+                                        }
 
-                                    @if (item.FinanceTypeId == 4)
-                                    {
-                                        <td> Alışveriş </td>
-                                    }
-                                    else
-                                    {
-                                        <td> Bakiye Yükleme </td>
-                                    }
-
-
-                                    <td>@item.Date</td>
+                                        @if (item.FinanceTypeId == 4)
+                                        {
+                                            <td> Alışveriş </td>
+                                        }
+                                        else
+                                        {
+                                            <td> Bakiye Yükleme </td>
+                                        }
 
 
-                                    @if (item.FinanceTypeId == 1)
-                                    {
-                                        <td> Onaylandı </td>
-                                    }
-                                    else if (item.FinanceTypeId == 2)
-                                    {
-                                        <td> İnceleniyor </td>
-                                    }
-                                    else if (item.FinanceTypeId == 3)
-                                    {
-                                        <td> Para Onayı Başarısız </td>
-                                    }
-                                    else
-                                    {
-                                        <td></td>
-                                    }
+                                        <td>@item.Date</td>
 
-                                </tr>
+
+                                        @if (item.FinanceTypeId == 1)
+                                        {
+                                            <td> Onaylandı </td>
+                                        }
+                                        else if (item.FinanceTypeId == 2)
+                                        {
+                                            <td> İnceleniyor </td>
+                                        }
+                                        else if (item.FinanceTypeId == 3)
+                                        {
+                                            <td> Para Onayı Başarısız </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+
+                                    </tr>
                                 }
 
 

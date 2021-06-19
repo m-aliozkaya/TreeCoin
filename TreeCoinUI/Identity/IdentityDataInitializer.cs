@@ -64,6 +64,21 @@ namespace TreeCoinUI.Identity
             }
             /* FinanceTypes end */
 
+            /* MoneyTypes start */
+            List<MoneyType> moneyTypes = new List<MoneyType>
+            {
+                new MoneyType(){Code = "TRY", Name = "Türk Lirasi"},
+                new MoneyType(){Code = "USD", Name = "Dolar"},
+                new MoneyType(){Code = "EUR", Name = "Euro"},
+                new MoneyType(){Code = "GBP", Name = "Sterlin"}
+            };
+
+            foreach (var item in moneyTypes)
+            {
+                context.MoneyTypes.Add(item);
+            }
+            /* MoneyTypes end */
+
             if (!context.Roles.Any(i => i.Name == "admin"))
             {
                 var store = new RoleStore<ApplicationRole>(context);
@@ -231,11 +246,11 @@ namespace TreeCoinUI.Identity
             /* OrderSuppliers star */
             List<Order> orders = new List<Order>()
             {
-                new Order(){SupplierId = 1, CustomerId = 1, ProductId = 1, Price = 150, QuantityValue = 30},
-                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 1, Price = 120, QuantityValue = 20},
-                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 5, Price = 300, QuantityValue = 30},
-                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 2, Price = 400, QuantityValue = 20},
-                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 1, Price = 80, QuantityValue = 10}
+                new Order(){SupplierId = 1, CustomerId = 1, ProductId = 1, Price = 150, QuantityValue = 30, Date = DateTime.Now},
+                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 1, Price = 120, QuantityValue = 20, Date = DateTime.Now},
+                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 5, Price = 300, QuantityValue = 30, Date = DateTime.Now},
+                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 2, Price = 400, QuantityValue = 20, Date = DateTime.Now},
+                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 1, Price = 80, QuantityValue = 10, Date = DateTime.Now}
             };
 
             foreach (var item in orders)
@@ -249,13 +264,13 @@ namespace TreeCoinUI.Identity
             /* FinanceHistory start */
             List<FinanceHistory> financeHistories = new List<FinanceHistory>()
             {
-                new FinanceHistory(){CustomerId = 1, Money = 270, Date = DateTime.Now, FinanceTypeId = 2},
-                new FinanceHistory(){CustomerId = 1, Money = 300, Date = DateTime.Now, FinanceTypeId = 2},
-                new FinanceHistory(){CustomerId = 1, Money = 800, Date = DateTime.Now, FinanceTypeId = 1},
-                new FinanceHistory(){CustomerId = 2, Money = 70, Date = DateTime.Now, FinanceTypeId = 1},
-                new FinanceHistory(){CustomerId = 2, Money = 100, Date = DateTime.Now, FinanceTypeId = 3},
-                new FinanceHistory(){CustomerId = 2, Money = 400, Date = DateTime.Now, FinanceTypeId = 1},
-                new FinanceHistory(){CustomerId = 2, Money = 80, Date = DateTime.Now, FinanceTypeId = 1}
+                new FinanceHistory(){CustomerId = 1, Money = 270, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
+                new FinanceHistory(){CustomerId = 1, Money = 300, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
+                new FinanceHistory(){CustomerId = 1, Money = 800, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 2},
+                new FinanceHistory(){CustomerId = 2, Money = 70, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 3},
+                new FinanceHistory(){CustomerId = 2, Money = 100, Date = DateTime.Now, FinanceTypeId = 3, MoneyTypeId = 4},
+                new FinanceHistory(){CustomerId = 2, Money = 400, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 1},
+                new FinanceHistory(){CustomerId = 2, Money = 80, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 1}
             };
 
             foreach (var item in financeHistories)

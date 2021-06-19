@@ -7,56 +7,95 @@
     ViewBag.Title = "Buy";
 }
 
-<div class="container col-md-8 p-4">
-
-    <style>
-        .card {
-            flex-direction: row;
-        }
-
-        .card img{
-            width:400px;
-        }
-
-    </style>
+<div class="container col-md-6 p-4">
 
     <div class="card">
-        <img src="~/Images/products/@ViewBag.Product.Image" alt="@ViewBag.Product.Name">
-        <div class="card-body">
-            <h2 class="mb-4">@ViewBag.Product.Name</h2>
+        <div class="card-header">
+            <h1 class="text-center">@ViewBag.Product.Name</h1>
+        </div>
+        <img class="p-5" src="~/Images/products/@ViewBag.Product.Image" alt="@ViewBag.Product.Name">
+        <div class="card-body pt-0">
 
             @if (ViewBag.Success == true)
             {
-                <div class="alert alert success">
+                <div class="alert alert-success" role="alert">
                     @ViewBag.Message
                 </div>
             }
             else if (ViewBag.Success == false)
             {
-                <div class="alert alert danger">
+                <div class="alert alert-danger" role="alert">
                     @ViewBag.Message
                 </div>
             }
 
-            @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+            <div class="row justify-content-between">
+                <div class="col-md-5 pt-4">
 
-                <div class="form-horizontal">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.ProductId)
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label" })
-                        <div>
-                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" }, @type = "number" })
-                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                    <h3 class="text-danger mb-4">Piyasadan Al</h3>
+
+                    @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ProductId)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label" })
+                                <div>
+                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", min = 1, value = "" }, @type = "number", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <input type="submit" value="Satın Al" class="btn btn-primary col-5 mt-4" />
+                            </div>
+
                         </div>
-                    </div>
-
-                    <input type="submit" value="Satın Al" class="btn btn-primary col-md-6 offset-md-6 mt-4" />
-
+                    }
                 </div>
-            }
+                <div class="col-md-5 pt-4">
+
+                    <h3 class="text-danger mb-4">Limitli Al</h3>
+
+                    @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.ProductId)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label" })
+                                <div>
+                                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", min = 1, value = "" }, @type = "number", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label" })
+                                <div>
+                                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", min = 1, value = "" }, @type = "number", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <input type="submit" value="Satın Al" class="btn btn-primary col-5 mt-4" />
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+
         </div>
+
+
+
+
     </div>
+
 </div>

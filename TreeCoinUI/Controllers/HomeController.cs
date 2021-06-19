@@ -47,6 +47,78 @@ namespace TreeCoinUI.Controllers
         public ActionResult Buy(Buy model)
         {
             var user = _context.Users.Find(User.Identity.GetUserId());
+
+            BuyResult result = BuyFromSupplier(model, user);
+
+            if (result.Amount > 0)
+            {
+                double commission = GetCommission(user, result.Amount);
+
+                FinanceHistory financeHistory = new FinanceHistory() { CustomerId = result.CustomerId, Money = result.Amount + commission, Date = DateTime.Now, FinanceTypeId = 4, MoneyTypeId = 1 };
+                _context.FinanceHistories.Add(financeHistory);
+
+                _context.SaveChanges();
+
+                ViewBag.Success = true;
+                ViewBag.Message = $"{result.PurchasedQuantity} adet ürün {result.Amount} TL' den alındı. İşlem için {commission} TL ücret kesildi.";
+
+            }
+            else if (model.Price > 0)
+            {
+                LimitBuy limitBuy = new LimitBuy {Date = DateTime.Now, Price = model.Price, ProductId = model.ProductId, UserId = user.Id, Quantity = model.Quantity };
+                _context.LimitBuys.Add(limitBuy);
+
+                _context.SaveChanges();
+
+                ViewBag.Success = true;
+                ViewBag.Message = $" {model.Quantity} tane ürün {model.Price}TL' den alınmak üzere istek listesine eklendi.";
+            }
+            else
+            {
+                ViewBag.Success = false;
+                ViewBag.Message = "Para yetmediği için ürün alınamadı.";
+            }
+
+            ViewBag.Product = _context.Products.Find(model.ProductId);
+            return View();
+        }
+
+        public void LimitBuy(int productId)
+        {
+            var limitBuys = _context.LimitBuys.Where(l => l.ProductId == productId).OrderByDescending(l => l.Price);
+
+            foreach (var item in limitBuys)
+            {
+                var user = _context.Users.Find(item.UserId);
+                var result = BuyFromSupplier(new Buy {ProductId = item.ProductId, Quantity = item.Quantity, Price = item.Price }, user);
+
+                if (result.Amount == 0)
+                {
+                    break;
+                }
+
+                if (result.Amount > 0)
+                {
+                    double commission = GetCommission(user, result.Amount);
+
+                    FinanceHistory financeHistory = new FinanceHistory() { CustomerId = result.CustomerId, Money = result.Amount + commission, Date = DateTime.Now, FinanceTypeId = 4, MoneyTypeId = 1 };
+                    _context.FinanceHistories.Add(financeHistory);
+                }
+
+                item.Quantity -= result.PurchasedQuantity;
+
+                if (item.Quantity == 0)
+                {
+                    _context.LimitBuys.Remove(item);
+                }
+
+            }
+
+            _context.SaveChanges();
+        }
+
+        public BuyResult BuyFromSupplier(Buy model, ApplicationUser user)
+        {
             var customerId = _context.Customers.Where(c => c.UserId == user.Id).FirstOrDefault().Id;
             var supplierProducts = _context.SupplierProducts.Where(p => p.ProductId == model.ProductId).OrderBy(sp => sp.Price);
 
@@ -57,12 +129,15 @@ namespace TreeCoinUI.Controllers
 
             foreach (var item in supplierProducts)
             {
-                
                 if (customerMoney < item.Price || wantedQuantity == 0)
                 {
                     break;
                 }
-                
+                else if ((model.Price > 0 && model.Price < item.Price))
+                {
+                    break;
+                }
+
                 var supplier = _context.Users.Find(_context.Suppliers.Find(item.SupplierId).UserId);
                 var startValue = item.QuantityValue;
                 double supplierAmount = 0;
@@ -97,28 +172,9 @@ namespace TreeCoinUI.Controllers
                 _context.Orders.Add(order);
             }
 
-            if (amount > 0)
-            {
-                double commission = GetCommission(user, amount);
-
-                FinanceHistory financeHistory = new FinanceHistory() { CustomerId = customerId, Money = amount+commission, Date = DateTime.Now, FinanceTypeId = 4 };
-                _context.FinanceHistories.Add(financeHistory);
-
-                _context.SaveChanges();
-
-                ViewBag.Success = true;
-                ViewBag.Message = $"{purchasedQuantity} adet ürün {amount} TL' den alındı. İşlem için {commission} TL ücret kesildi.";
-            } else
-            {
-                ViewBag.Success = false;
-                ViewBag.Message = "Para yetmediği için ürün alınamadı.";
-            }
-
-
-            ViewBag.Product = _context.Products.Find(model.ProductId);
-            return View();
-           
+            return new BuyResult { Amount = amount, PurchasedQuantity = purchasedQuantity, CustomerId = customerId };
         }
+
 
         public double GetCommission(ApplicationUser customer, double amount)
         {
