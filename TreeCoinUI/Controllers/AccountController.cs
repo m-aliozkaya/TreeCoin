@@ -70,16 +70,21 @@ namespace TreeCoinUI.Controllers
 
             ViewBag.CustomerId = customer.Id;
 
-            Cuzdanim model;
+            var limitBuyQuery = _context.LimitBuys
+                .Where(l => l.UserId == userId)
+                .Join(_context.Products, l => l.ProductId, p => p.Id, (l, p) => new {l.Price, l.Quantity, l.Date, ProductName = p.Name })
+                .ToList();
 
-            if (finans.Count() != 0 )
+            var limitBuys = limitBuyQuery.Select(l => new LimitBuy()
             {
-                model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = financeHistories };
-            } else
-            {
-                model = new Cuzdanim() { Bakiye = bakiye };
-            }
+                Date = l.Date,
+                Quantity = l.Quantity,
+                Price = l.Price,
+                Product = new Product { Name = l.ProductName}
+            }).OrderByDescending(l => l.Date).ToList();
 
+            Cuzdanim model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = financeHistories, limitBuys = limitBuys };
+           
 
             return View(model);
         }
@@ -100,15 +105,17 @@ namespace TreeCoinUI.Controllers
             var user = _context.Users.Find(userId);
             var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
 
-            List<string> infoList = new List<string>();
-            infoList.Add($"Kullanici Adi : {user.UserName}");
-            infoList.Add($"Ad : {user.Name}");
-            infoList.Add($"Soyad : {user.SurName}");
-            infoList.Add($"Email : {user.Email}");
-            infoList.Add($"Para : {user.Money}");
+            var map = new Dictionary<string, string>()
+            {
+                {"Kullanici Adi", user.UserName},
+                {"Ad", user.Name},
+                {"Soyad", user.SurName},
+                {"Email", user.Email},
+                {"Para", user.Money.ToString()}
+            };
 
             var history = _context.Orders.Where(o => o.CustomerId == customer.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
-            return RaporAl(history, infoList);
+            return RaporAl(history, map);
         }
 
         public ActionResult SatisRaporunuAl()
@@ -117,49 +124,53 @@ namespace TreeCoinUI.Controllers
             var user = _context.Users.Find(userId);
             var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
 
-            List<string> infoList = new List<string>();
-            infoList.Add($"Kullanici Adi : {user.UserName}");
-            infoList.Add($"Ad : {user.Name}");
-            infoList.Add($"Soyad : {user.SurName}");
-            infoList.Add($"Email : {user.Email}");
-            infoList.Add($"Para : {user.Money} TL");
+            var map = new Dictionary<string, string>()
+            {
+                {"Kullanici Adi", user.UserName},
+                {"Ad", user.Name},
+                {"Soyad", user.SurName},
+                {"Email", user.Email},
+                {"Para", user.Money.ToString()}
+            };
 
             var history = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
-            return RaporAl(history, infoList);
+            return RaporAl(history, map);
         }
 
-        public ActionResult RaporAl(List<SalesHistory> salesHistories, List<string> infos)
+        public ActionResult RaporAl(List<SalesHistory> salesHistories, Dictionary<string, string> infos)
         {
             MemoryStream workStream = new MemoryStream();
             //file name to be created 
             string strPDFFileName = string.Format("TreeCoinRapor" + ".pdf");
-            Document doc = new Document();
-            doc.SetMargins(0f, 0f, 10f, 0f);
+            Document doc = new Document(PageSize.A5.Rotate());
+            doc.SetMargins(30f, 30f, 20f, 0f);
    
             //Create PDF Table with 5 columns
-            PdfPTable tableLayout = new PdfPTable(4);
+            PdfPTable tableLayout = new PdfPTable(5);
 
             PdfWriter.GetInstance(doc, workStream).CloseStream = false;
             doc.Open();
     
             Paragraph paragraph = new Paragraph();
-            paragraph.IndentationLeft = 30;
             paragraph.SpacingBefore = 30;
 
             foreach (var item in infos)
             {
-                Chunk chunk = new Chunk(item);
-                chunk.SetBackground(new BaseColor(128, 0, 0));
-                chunk.Font = FontFactory.GetFont("TimesNewRoman", 15, BaseColor.ORANGE);
+                Chunk chunk = new Chunk(item.Key + ": ");
+                chunk.setLineHeight(25);
+                chunk.Font = FontFactory.GetFont("TimesNewRoman", 15, Font.BOLD, BaseColor.BLACK);
+                Chunk chunk2 = new Chunk(item.Value);
+                chunk2.setLineHeight(25);
+                chunk2.Font = FontFactory.GetFont("TimesNewRoman", 15, BaseColor.BLACK);
                 paragraph.Add(chunk);
+                paragraph.Add(chunk2);
                 paragraph.Add(Chunk.NEWLINE);
             }
 
             doc.Add(paragraph);
 
             Paragraph p = new Paragraph();
-            p.IndentationLeft = 30;
-            p.SpacingBefore = 20;
+            p.SpacingBefore = 50;
             p.Add(CreateSalesHistoryTable(tableLayout, salesHistories));
             doc.Add(p);
             
@@ -175,10 +186,10 @@ namespace TreeCoinUI.Controllers
 
         protected PdfPTable CreateSalesHistoryTable(PdfPTable tableLayout, List<SalesHistory> salesHistories)
         {
-            float[] headers = { 35, 35, 35, 35 };  //Header Widths
+            float[] headers = { 40, 20, 20, 20, 40 };  //Header Widths
             tableLayout.SetWidths(headers);
             tableLayout.HorizontalAlignment = Element.ALIGN_LEFT; //Set the pdf headers
-            tableLayout.WidthPercentage = 60;       //Set the PDF File witdh percentage
+            tableLayout.WidthPercentage =   100;       //Set the PDF File witdh percentage
             tableLayout.HeaderRows = 1;
             //Add Title to the PDF file at the top
 
@@ -186,16 +197,19 @@ namespace TreeCoinUI.Controllers
             tableLayout.AddCell(new PdfPCell(new Phrase("Alim-Satim Geçmisi", new Font(Font.FontFamily.HELVETICA, 12, 1, new iTextSharp.text.BaseColor(0, 0, 0)))) { Colspan = 12, Border = 0, PaddingBottom = 5, HorizontalAlignment = Element.ALIGN_CENTER });
 
             ////Add header
-            AddCellToHeader(tableLayout, "Ürün Ismi");
+            AddCellToHeader(tableLayout, "Ürün Adi");
+            AddCellToHeader(tableLayout, "Birim Fiyat");
             AddCellToHeader(tableLayout, "Ürün Miktar");
-            AddCellToHeader(tableLayout, "Tutar");
+            AddCellToHeader(tableLayout, "Toplam Tutar");
             AddCellToHeader(tableLayout, "Tarih");
 
             ////Add body
           
             foreach (var item in salesHistories)
             {
+                double pricePer = item.Price / item.QuantityValue;
                 AddCellToBody(tableLayout, item.ProductName);
+                AddCellToBody(tableLayout, pricePer.ToString());
                 AddCellToBody(tableLayout, item.QuantityValue.ToString());
                 AddCellToBody(tableLayout, item.Price.ToString());
                 AddCellToBody(tableLayout, item.Date.ToString());
@@ -208,15 +222,14 @@ namespace TreeCoinUI.Controllers
         private static void AddCellToHeader(PdfPTable tableLayout, string cellText)
         {
 
-            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 8, 1, iTextSharp.text.BaseColor.ORANGE))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(128, 0, 0) });
+            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 10, 1, iTextSharp.text.BaseColor.ORANGE))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(128, 0, 0) });
         }
 
         // Method to add single cell to the body
         private static void AddCellToBody(PdfPTable tableLayout, string cellText)
         {
-            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 8, 1, iTextSharp.text.BaseColor.BLACK))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(255, 255, 255) });
+            tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 12, 1, iTextSharp.text.BaseColor.BLACK))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(255, 255, 255) });
         }
-
 
         [ValidateAntiForgeryToken]
         [HttpPost]

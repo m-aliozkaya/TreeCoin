@@ -10,6 +10,8 @@ namespace TreeCoinUI.Models
     {
         public List<FinanceHistory> FinanceHistory { get; set; }
 
+        public List<LimitBuy> limitBuys { get; set; }
+
         public double Bakiye { get; set; }
     }
 }

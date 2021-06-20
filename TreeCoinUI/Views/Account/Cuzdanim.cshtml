@@ -150,6 +150,47 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mt-5">
+                <div class="card-header bg-primary text-white">Bekleyen Limitli İşlemler</div>
+                <div class="card-body p-0 m-0">
+                    <div class="table-responsive-md">
+                        <table class="table table-striped table-info m-0">
+
+                            @if (Model.limitBuys.Count == 0)
+                            {
+                                <td>Bekleyen limitli işlem yok</td>
+                              }
+                            else
+                            {
+                                <thead>
+                                    <tr>
+                                        <td>İstenilen Miktar</td>
+                                        <td>Ürün Adı</td>
+                                        <td>İstenen Fiyat</td>
+                                        <td>Tarih</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in Model.limitBuys)
+                                    {
+                                        <tr>
+                                            <td>@item.Quantity</td>
+                                            <td>@item.Product.Name</td>
+                                            <td>@item.Price</td>
+                                            <td>@item.Date</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            }
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
