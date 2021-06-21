@@ -147,7 +147,7 @@ namespace TreeCoinUI.Identity
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
 
-                var user = new ApplicationUser() { Name = "Furkan", SurName = "Abaylı", UserName = "bazig", Email = "bazig@bazig.com", Date = DateTime.Now, Money = 50, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Samsun" };
+                var user = new ApplicationUser() { Name = "Furkan", SurName = "Abaylı", UserName = "bazig", Email = "bazig@bazig.com", Date = DateTime.Now, Money = 1064.653, Tc = "12345678910", PhoneNumber = "5448271400", Adress = "Samsun" };
 
                 manager.Create(user, "1234567");
                 manager.AddToRole(user.Id, "customer");
@@ -243,33 +243,16 @@ namespace TreeCoinUI.Identity
 
             /* SupplierProducts end */
 
-            /* OrderSuppliers star */
-            List<Order> orders = new List<Order>()
-            {
-                new Order(){SupplierId = 1, CustomerId = 1, ProductId = 1, Price = 150, QuantityValue = 30, Date = DateTime.Now},
-                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 1, Price = 120, QuantityValue = 20, Date = DateTime.Now},
-                new Order(){SupplierId = 2, CustomerId = 1, ProductId = 5, Price = 300, QuantityValue = 30, Date = DateTime.Now},
-                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 2, Price = 400, QuantityValue = 20, Date = DateTime.Now},
-                new Order(){SupplierId = 1, CustomerId = 2, ProductId = 1, Price = 80, QuantityValue = 10, Date = DateTime.Now}
-            };
-
-            foreach (var item in orders)
-            {
-                context.Orders.Add(item);
-            }
-            /* OrderSuppliers end */
-
-            context.SaveChanges();
+           context.SaveChanges();
 
             /* FinanceHistory start */
             List<FinanceHistory> financeHistories = new List<FinanceHistory>()
             {
-                new FinanceHistory(){CustomerId = 1, Money = 270, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
-                new FinanceHistory(){CustomerId = 1, Money = 300, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
-                new FinanceHistory(){CustomerId = 1, Money = 800, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 2},
+                new FinanceHistory(){CustomerId = 1, Money = 100, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
+                new FinanceHistory(){CustomerId = 1, Money = 50, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = 1},
                 new FinanceHistory(){CustomerId = 2, Money = 70, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 3},
                 new FinanceHistory(){CustomerId = 2, Money = 100, Date = DateTime.Now, FinanceTypeId = 3, MoneyTypeId = 4},
-                new FinanceHistory(){CustomerId = 2, Money = 400, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 1},
+                new FinanceHistory(){CustomerId = 2, Money = 200, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 1},
                 new FinanceHistory(){CustomerId = 2, Money = 80, Date = DateTime.Now, FinanceTypeId = 1, MoneyTypeId = 1}
             };
 
