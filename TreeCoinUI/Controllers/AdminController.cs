@@ -76,14 +76,8 @@ namespace TreeCoinUI.Controllers
             var user = _context.Users.Find(userId);
 
             var url = "https://www.tcmb.gov.tr/kurlar/today.xml";
-            var doc = new XmlDocument();
-            doc.Load(url);
-            string usd = doc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{moneyType.Code}']/BanknoteSelling").InnerXml;
-            
-            NumberFormatInfo provider = new NumberFormatInfo();
-            provider.NumberDecimalSeparator = ".";
+   
 
-            double money = Convert.ToDouble(usd, provider) * financeHistory.Money;
 
             switch (submit)
             {
@@ -91,6 +85,12 @@ namespace TreeCoinUI.Controllers
                     financeHistory.FinanceTypeId = 3;
                     break;
                 case "Onayla":
+                    NumberFormatInfo provider = new NumberFormatInfo();
+                    provider.NumberDecimalSeparator = ".";
+                    var doc = new XmlDocument();
+                    doc.Load(url);
+                    string usd = doc.SelectSingleNode($"Tarih_Date/Currency [@Kod='{moneyType.Code}']/BanknoteSelling").InnerXml;
+                    double money = Convert.ToDouble(usd, provider) * financeHistory.Money;
                     financeHistory.FinanceTypeId = 1;
                     user.Money += money;
                     break;
