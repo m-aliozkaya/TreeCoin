@@ -1,0 +1,44 @@
+﻿@model TreeCoinUI.Models.ReportHistoryDates
+
+@{
+    ViewBag.Title = "SatisRaporunuAl";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <h2 class="mb-0">Satış Raporunu Al</h2>
+    <div class="col-md-4 text-danger mb-3">
+        <small>( Lütfen Tarih Aralığını Seçiniz )</small>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.StartDate, "Başlangıç Tarihi", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control col-md-4", type = "date" })
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.EndDate, "Bitiş Tarihi", htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control col-md-4", type = "date" })
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Raporu İndir" class="btn btn-success" />
+                    @Html.ActionLink("Cüzdana Dön", "Cuzdanim", "Account", null, new { @class = "btn btn-warning text-white" })
+                </div>
+            </div>
+        </div>
+    }
+</div>

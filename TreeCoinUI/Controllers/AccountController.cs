@@ -101,6 +101,17 @@ namespace TreeCoinUI.Controllers
 
         public ActionResult AlimRaporunuAl()
         {
+            return View();
+        }
+
+        public ActionResult SatisRaporunuAl()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AlimRaporunuAl(ReportHistoryDates dates)
+        {
             var userId = User.Identity.GetUserId();
             var user = _context.Users.Find(userId);
             var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
@@ -114,11 +125,12 @@ namespace TreeCoinUI.Controllers
                 {"Para", user.Money.ToString()}
             };
 
-            var history = _context.Orders.Where(o => o.CustomerId == customer.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+            var history = _context.Orders.Where(o => o.CustomerId == customer.Id && (o.Date >= dates.StartDate && o.Date <= dates.EndDate)).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
             return RaporAl(history, map);
         }
 
-        public ActionResult SatisRaporunuAl()
+        [HttpPost]
+        public ActionResult SatisRaporunuAl(ReportHistoryDates dates)
         {
             var userId = User.Identity.GetUserId();
             var user = _context.Users.Find(userId);
@@ -133,7 +145,7 @@ namespace TreeCoinUI.Controllers
                 {"Para", user.Money.ToString()}
             };
 
-            var history = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+            var history = _context.Orders.Where(o => o.SupplierId == supplier.Id && (o.Date >= dates.StartDate && o.Date <= dates.EndDate)).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
             return RaporAl(history, map);
         }
 
@@ -253,7 +265,9 @@ namespace TreeCoinUI.Controllers
                     break;
             }
 
-            FinanceHistory financeHistory = new FinanceHistory() { CustomerId = Id, Money = money, Date = DateTime.Now, FinanceTypeId = 2 };
+            int moneyType = Convert.ToInt32(rateCode);
+
+            FinanceHistory financeHistory = new FinanceHistory() { CustomerId = Id, Money = money, Date = DateTime.Now, FinanceTypeId = 2, MoneyTypeId = moneyType };
             _context.FinanceHistories.Add(financeHistory);
 
             _context.SaveChanges();

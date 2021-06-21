@@ -194,6 +194,7 @@
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\NewProduct.cs" />
     <Compile Include="Models\Register.cs" />
+    <Compile Include="Models\ReportHistoryDates.cs" />
     <Compile Include="Models\SalesHistory.cs" />
     <Compile Include="Models\Urun.cs" />
     <Compile Include="Models\ViewModel.cs" />
@@ -219,6 +220,8 @@
     <Content Include="Views\Product\UrunEkle.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Account\SatisGecmisim.cshtml" />
+    <Content Include="Views\Account\AlimRaporunuAl.cshtml" />
+    <Content Include="Views\Account\SatisRaporunuAl.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
