@@ -14,12 +14,14 @@ using TreeCoinUI.Models;
 
 namespace TreeCoinUI.Controllers
 {
+    // Admin işlemlerinin olduğu class
     [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         IdentityDataContext _context = new IdentityDataContext();
 
-        // GET: Admin
+
+        // Onaylanmamış ürünleri ve para isteklerini anasayfada listeler
         public ActionResult Index()
         {
             var products = _context.Products.Where(p => p.IsApproved == false).Join(_context.Quantities, p => p.QuantityId, q => q.Id, (p, q) => new AdminProductConfirm()
@@ -37,6 +39,8 @@ namespace TreeCoinUI.Controllers
             return View(model);
         }
 
+
+        // Adminin ürünü onayladığı ya da sildiği kısım
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Index(string submit, int Id)
@@ -60,6 +64,8 @@ namespace TreeCoinUI.Controllers
             return RedirectToAction("Index");
         }
 
+
+        // Adminin parayı onayladığı kısım
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConfirmMoney(string submit, int CustomerId, int Id)

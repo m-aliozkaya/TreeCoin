@@ -22,6 +22,8 @@ namespace TreeCoinUI.Controllers
             return View();
         }
 
+
+        // Formda doldurulan kısma göre yeni ürün eklediğimiz kısım
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult YeniUrun(NewProduct model)
@@ -63,12 +65,17 @@ namespace TreeCoinUI.Controllers
             return View(model);
         }        
         
+
         public ActionResult UrunEkle()
         {
             ViewBag.ProductId = new SelectList(_context.Products, "Id", "Name");
             return View();
         }
 
+
+        // Sistemde zaten olan bir üründe kullanıcıya miktar eklenmesi
+        // İşlem gerçekleştikten sonra ürün ıd' si ile HomeController' daki limit buy tetiklenir.
+        // Eğer istenen fiyata uygun bir fiyatla ürün eklenmişse limit buydaki işlemler gerçekleşir.
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult UrunEkle(Urun model)

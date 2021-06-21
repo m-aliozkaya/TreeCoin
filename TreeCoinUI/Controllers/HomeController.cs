@@ -27,13 +27,16 @@ namespace TreeCoinUI.Controllers
             RoleManager = new RoleManager<ApplicationRole>(roleStore);
         }
 
-        // GET: Home
+
+        // Ürünleri listeler.
         [AllowAnonymous]
         public ActionResult Index()
         {
             return View(_context.Products.Where(product => product.IsApproved == true).ToList());
         }
 
+
+        // Ürün alım sayfası
         public ActionResult Buy(int id)
         {
             ViewBag.Success = null;
@@ -42,14 +45,18 @@ namespace TreeCoinUI.Controllers
             return View(buy);
         }
 
+
+        // Ürününün alım işleminin gerçekleştiği method
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Buy(Buy model)
         {
             var user = _context.Users.Find(User.Identity.GetUserId());
 
+            // Kullanıcı satın alma işlemini yapar ve bir sonuç döner.
             BuyResult result = BuyFromSupplier(model, user);
 
+            // Eğer satın alma olduysa yani tutar > 0 ' ise komisyon alınır ve bu kullanıcının finans geçmişine eklenir.
             if (result.Amount > 0)
             {
                 double commission = GetCommission(user, result.Amount);
@@ -63,6 +70,7 @@ namespace TreeCoinUI.Controllers
                 ViewBag.Message = $"{result.PurchasedQuantity} adet ürün {result.Amount} TL' den alındı. İşlem için {commission} TL ücret kesildi.";
 
             }
+            // Eğer kullanıcı belirli bir fiyattan almak istiyorsa bu istek listesine eklenir.
             else if (model.Price > 0)
             {
                 LimitBuy limitBuy = new LimitBuy {Date = DateTime.Now, Price = model.Price, ProductId = model.ProductId, UserId = user.Id, Quantity = model.Quantity };
@@ -83,6 +91,9 @@ namespace TreeCoinUI.Controllers
             return View();
         }
 
+
+        // Verilen ürün idsine sahip bir istek listesi varsa o ürünü satın almayı dener. Satın aldığı kadar istek listesinden azaltır.
+        // Komisyon alır ve işlem geçmişine ekler.
         public void LimitBuy(int productId)
         {
             var limitBuys = _context.LimitBuys.Where(l => l.ProductId == productId).OrderByDescending(l => l.Price);
@@ -117,6 +128,9 @@ namespace TreeCoinUI.Controllers
             _context.SaveChanges();
         }
 
+
+        // Asıl satın alma işleminin gerçekleştiği kısım, kendisine verilen model ve kullanıcı doğrultusunda ..
+        // .. satın alma işlemlerini yönetir.
         public BuyResult BuyFromSupplier(Buy model, ApplicationUser user)
         {
             var customerId = _context.Customers.Where(c => c.UserId == user.Id).FirstOrDefault().Id;
@@ -159,6 +173,7 @@ namespace TreeCoinUI.Controllers
                     customerMoney -= item.Price;
                 }
 
+                // Sipariş geçmişi oluşturur.
                 Order order = new Order()
                 {
                     CustomerId = customerId,
@@ -174,8 +189,9 @@ namespace TreeCoinUI.Controllers
 
             return new BuyResult { Amount = amount, PurchasedQuantity = purchasedQuantity, CustomerId = customerId };
         }
+        
 
-
+        // Verilen müşteri ve miktar doğrultusunda komisyon keser.
         public double GetCommission(ApplicationUser customer, double amount)
         {
             double commission = amount * 1 / 100;

@@ -25,32 +25,41 @@ namespace TreeCoinUI.Controllers
 
         public AccountController()
         {
+            // Kullanıcı işlemlerini yönetmek için controller başlayınca nesneleri oluşturuyoruz.
             var userStore = new UserStore<ApplicationUser>(new IdentityDataContext());
             UserManager = new UserManager<ApplicationUser>(userStore);
 
+            // Rol işlemlerini yönetmek için controller başlayınca nesneleri oluşturuyoruz.
             var roleStore = new RoleStore<ApplicationRole>(new IdentityDataContext());
             RoleManager = new RoleManager<ApplicationRole>(roleStore);
         }
 
+
         public ActionResult Dukkanim()
         {
+            // Kullanıcı bilgileri alınır
             var userId = User.Identity.GetUserId();
             var bakiye = _context.Users.Find(userId).Money;
             var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
 
+
+            // Satıcının ürünleri (resim, miktarı, ismi, fiyatı, onaylanıp onaylanmadığı) veritabanından çekilip view' a gönderiliyor.
             var model = _context.SupplierProducts.Join(_context.Products, sp => sp.ProductId, p => p.Id, (sp, p) => new Dukkanim(){
             ProductId = p.Id, Image = p.Image, IsApproved = p.IsApproved, QuantityValue = sp.QuantityValue, ProductName = p.Name, Price = sp.Price, SupplierId = sp.SupplierId
             }).Where(sp => sp.SupplierId == supplier.Id).ToList();
-
             return View(model);
         }
 
+
         public ActionResult Cuzdanim()
         {
+            // Kullanıcı bilgileri alınır
             var userId = User.Identity.GetUserId();
             var bakiye = _context.Users.Find(userId).Money;
             var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
 
+
+            // Müşterinin işlem geçmişini (alımlar, para yüklemeleri) getirir.
             var finans = _context.FinanceHistories
                 .Where(f => f.CustomerId == customer.Id)
                 .Join(_context.MoneyTypes, f => f.MoneyTypeId, m => m.Id, (f,m) => new {f.FinanceTypeId, f.Date, f.CustomerId, f.Money, f.MoneyTypeId, m.Code, f.Id  })
@@ -68,8 +77,8 @@ namespace TreeCoinUI.Controllers
             }).OrderByDescending(f => f.Date).ToList();
 
 
-            ViewBag.CustomerId = customer.Id;
 
+            // Müşterinin limit fiyattan yaptığı istekleri göstermek için veritabanından çekiyoruz
             var limitBuyQuery = _context.LimitBuys
                 .Where(l => l.UserId == userId)
                 .Join(_context.Products, l => l.ProductId, p => p.Id, (l, p) => new {l.Price, l.Quantity, l.Date, ProductName = p.Name })
@@ -83,39 +92,47 @@ namespace TreeCoinUI.Controllers
                 Product = new Product { Name = l.ProductName}
             }).OrderByDescending(l => l.Date).ToList();
 
-            Cuzdanim model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = financeHistories, limitBuys = limitBuys };
-           
 
+            // View' da kullanılmak istediğim verileri gönderiyoruz (Müşteri Id, bakiye, işlem geçmişi, bekleyen limit istek listesi)
+            ViewBag.CustomerId = customer.Id;
+            Cuzdanim model = new Cuzdanim() { Bakiye = bakiye, FinanceHistory = financeHistories, limitBuys = limitBuys };    
             return View(model);
         }
+
 
         public ActionResult SatisGecmisim()
         {
+            // Kullanıcı bilgileri alınır
             var userId = User.Identity.GetUserId();
             var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
 
-            var model = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() {Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue}).ToList();
-
+            // Satıcının satış geçmişi en son satılandan ilk satılana doğru sıralanarak veritabanından çekilir ve view' a gönderilir.
+            var model = _context.Orders.Where(o => o.SupplierId == supplier.Id).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() {Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue}).OrderByDescending(o => o.Date).ToList();
             return View(model);
         }
+
 
         public ActionResult AlimRaporunuAl()
         {
             return View();
         }
 
+
         public ActionResult SatisRaporunuAl()
         {
             return View();
         }
 
+
         [HttpPost]
         public ActionResult AlimRaporunuAl(ReportHistoryDates dates)
         {
+            // Kullanıcı bilgileri alınır.
             var userId = User.Identity.GetUserId();
             var user = _context.Users.Find(userId);
             var customer = _context.Customers.Where(c => c.UserId == userId).FirstOrDefault();
 
+            // Pdf' te kullanılmak üzere kullanıcı bilgilerinin olduğu bir map oluşturulur.
             var map = new Dictionary<string, string>()
             {
                 {"Kullanici Adi", user.UserName},
@@ -125,17 +142,23 @@ namespace TreeCoinUI.Controllers
                 {"Para", user.Money.ToString()}
             };
 
+            // Kullanıcının verdiği başlangıç ve bitiş tarihi aralığındaki alım geçmişini getirir.
             var history = _context.Orders.Where(o => o.CustomerId == customer.Id && (o.Date >= dates.StartDate && o.Date <= dates.EndDate)).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+            
+            // RaporAl fonksiyonunu döndürür. Pdf verilen bilgilere göre oluşturulur ve kullanıcıya o veri indirilme olarak verilir.
             return RaporAl(history, map);
         }
+
 
         [HttpPost]
         public ActionResult SatisRaporunuAl(ReportHistoryDates dates)
         {
+            // Kullanıcı bilgileri alınır.
             var userId = User.Identity.GetUserId();
             var user = _context.Users.Find(userId);
             var supplier = _context.Suppliers.Where(c => c.UserId == userId).FirstOrDefault();
 
+            // Pdf' te kullanılmak üzere kullanıcı bilgilerinin olduğu bir map oluşturulur.
             var map = new Dictionary<string, string>()
             {
                 {"Kullanici Adi", user.UserName},
@@ -145,10 +168,15 @@ namespace TreeCoinUI.Controllers
                 {"Para", user.Money.ToString()}
             };
 
+            // Kullanıcının verdiği başlangıç ve bitiş tarihi aralığındaki alım geçmişini getirir.
             var history = _context.Orders.Where(o => o.SupplierId == supplier.Id && (o.Date >= dates.StartDate && o.Date <= dates.EndDate)).Join(_context.Products, o => o.ProductId, p => p.Id, (o, p) => new SalesHistory() { Date = o.Date, Price = o.Price, ProductName = p.Name, QuantityValue = o.QuantityValue }).ToList();
+
+            // RaporAl fonksiyonunu döndürür. Pdf verilen bilgilere göre oluşturulur ve kullanıcıya o veri indirilme olarak verilir.
             return RaporAl(history, map);
         }
 
+        
+        // Verilen listeye ve kullanıcı bilgilerine göre pdf oluşturur.
         public ActionResult RaporAl(List<SalesHistory> salesHistories, Dictionary<string, string> infos)
         {
             MemoryStream workStream = new MemoryStream();
@@ -196,6 +224,8 @@ namespace TreeCoinUI.Controllers
             return File(workStream, "application/pdf", strPDFFileName);
         }
 
+       
+        // Satış geçmişi ile ilgili tablo oluşturur. Ve bu tabloyu verilen listeye göre doldurur.
         protected PdfPTable CreateSalesHistoryTable(PdfPTable tableLayout, List<SalesHistory> salesHistories)
         {
             float[] headers = { 40, 20, 20, 20, 40 };  //Header Widths
@@ -230,19 +260,24 @@ namespace TreeCoinUI.Controllers
             return tableLayout;
         }
 
-        // Method to add single cell to the Header
+       
+        // Pdf' teki tablonun headerina cell ekleyen method
+        
         private static void AddCellToHeader(PdfPTable tableLayout, string cellText)
         {
 
             tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 10, 1, iTextSharp.text.BaseColor.ORANGE))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(128, 0, 0) });
         }
 
-        // Method to add single cell to the body
+        
+        // Pdf' teki tablonun headerina cell ekleyen method
         private static void AddCellToBody(PdfPTable tableLayout, string cellText)
         {
             tableLayout.AddCell(new PdfPCell(new Phrase(cellText, new Font(Font.FontFamily.HELVETICA, 12, 1, iTextSharp.text.BaseColor.BLACK))) { HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = new iTextSharp.text.BaseColor(255, 255, 255) });
         }
 
+
+        // Para isteğinde bulunduran method
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult LoadMoney(int Id, string submit, string rateCode, int Quantity = 0)
@@ -275,12 +310,14 @@ namespace TreeCoinUI.Controllers
             return RedirectToAction("Cuzdanim");
         }
 
+
         public ActionResult Register()
         {
             var roles = RoleManager.Roles.Where(r => r.Name != "admin").ToList();
             ViewBag.RoleId = new SelectList(roles, "Id", "Name");
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -320,6 +357,7 @@ namespace TreeCoinUI.Controllers
             ViewBag.RoleId = new SelectList(roles, "Id", "Name", model.RoleId);
             return View(model);
         }
+
 
         public ActionResult Login()
         {
@@ -364,6 +402,8 @@ namespace TreeCoinUI.Controllers
             return View();
         }
 
+
+        // Hesaptan ıkış yapabilmemizi sağlayan method.
         public ActionResult Logout()
         {
             var authManager = HttpContext.GetOwinContext().Authentication;
